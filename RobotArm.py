@@ -1,14 +1,15 @@
 from adafruit_servokit import ServoKit
+from ServoJoint import ServoJoint
+
+from Bone import Bone
+
+
+
 import time 
+import math 
 
 class RobotArm:
     kit = ServoKit(channels=16)
-
-    WRIST = 0
-    ELBOW = 4
-    SHOLDER_UP_DOWN = 8
-    GRIP = 12
-    ROTATE = 15
 
     ROTATE_FULLY_LEFT = 180
     ROTATE_FULLY_RIGHT = 0
@@ -30,27 +31,77 @@ class RobotArm:
     WRIST_FULLY_UP = 180
 
     def __init__(self):
+        self.rotate = ServoJoint(self.kit, 15, 0, 60, 180)
+        self.shoulder = ServoJoint(self.kit, 8, 60, 90, 145)
+        self.elbow = ServoJoint(self.kit, 4, 10, 90, 180)
+        self.wrist = ServoJoint(self.kit, 0, 0, 90, 180)
+        self.grip = ServoJoint(self.kit, 12, 60, 120, 180)
 
-        self.kit.servo[self.ROTATE].angle = self.ROTATE_NORMAL # 
-        self.kit.servo[self.GRIP].angle = self.GRIP_OPEN
-        self.kit.servo[self.ELBOW].angle = self.ELBOW_90_DEG
 
-        self.kit.servo[self.SHOLDER_UP_DOWN].angle = self.SHOULDER_UP
-        self.kit.servo[self.WRIST].angle = self.WRIST_NEUTRAL = 90
+
+        lowerArmBone = Bone(self.shoulder, 20, 1.0, 0)
+        upperArmBone = Bone(self.elbow, 20, -1.0, 0)
+        wristBone =    Bone(self.wrist, 5, 1.0, -math.pi/2)
+
+        upperArmBone.setParent(lowerArmBone)
 
         
+        wristBone.setParent(upperArmBone)
+
+        
+        print(lowerArmBone, upperArmBone, wristBone)
+        
+
+
 
     def Shoulder(self, angle):
-        self.kit.servo[self.SHOLDER_UP_DOWN].angle = angle
+        self.shoulder.setAngle(angle)
 
     def Grip(self, angle):
-        self.kit.servo[self.GRIP].angle = angle
+        self.grip.setAngle(angle)
 
     def Wrist(self, angle):
-        self.kit.servo[self.WRIST].angle = angle
+        self.wrist.setAngle(angle)
 
     def Elbow(self, angle):
-        self.kit.servo[self.ELBOW].angle = angle
+        self.elbow.setAngle(angle)
 
     def Rotate(self, angle):
-        self.kit.servo[self.ROTATE].angle = angle
+        self.rotate.setAngle(angle)
+
+    def demo(self):
+        self.Grip(self.GRIP_OPEN)
+        time.sleep(1.5)
+        self.Grip(self.GRIP_CLOSED)
+        time.sleep(1.5)
+        self.Grip(self.GRIP_OPEN)
+
+        time.sleep(1.5)
+        self.Wrist(self.WRIST_FULLY_DOWN)
+        time.sleep(1.5)
+        self.Wrist(self.WRIST_FULLY_UP)
+        time.sleep(1.5)
+        self.Wrist(self.WRIST_NEUTRAL)
+
+        time.sleep(1.5)
+        self.Elbow(self.ELBOW_FULLY_OPEN)
+        time.sleep(1.5)
+        self.Elbow(self.ELBOW_FULLY_CLOSED)
+        time.sleep(1.5)
+        self.Elbow(self.ELBOW_90_DEG)
+
+        time.sleep(1.5)
+        self.Shoulder(self.SHOULDER_FORWARD)
+        time.sleep(1.5)
+        self.Shoulder(self.SHOULDER_BACKWARD)
+        time.sleep(1.5)
+        self.Shoulder(self.SHOULDER_UP)
+
+        time.sleep(1.5)
+        self.Rotate(self.ROTATE_FULLY_LEFT)
+        time.sleep(1.5)
+        self.Rotate(self.ROTATE_FULLY_RIGHT)
+        time.sleep(1.5)
+        self.Rotate(self.ROTATE_NORMAL)
+
+        

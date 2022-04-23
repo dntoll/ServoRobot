@@ -4,8 +4,9 @@ import time
 a = RobotArm()
 
 #while True:
-#a.Shoulder(90)
 time.sleep(0.5)
+a.demo()
+
 #a.downShoulder()
 #time.sleep(0.5)
 #kit.servo[WRIST].angle = 175
