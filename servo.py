@@ -1,17 +1,17 @@
-from adafruit_servokit import ServoKit
-kit = ServoKit(channels=16)
+from RobotArm import RobotArm
+import time
+    
+a = RobotArm()
 
-WRIST = 0
-ELBOW = 4
-SHOLDER_UP_DOWN = 8
-GRIP = 12
-ROTATE = 15
+#while True:
+#a.Shoulder(90)
+time.sleep(0.5)
+#a.downShoulder()
+#time.sleep(0.5)
+#kit.servo[WRIST].angle = 175
+#kit.servo[ELBOW].angle = 90
+#kit.servo[SHOLDER_UP_DOWN].angle = 90
 
-kit.servo[GRIP].angle = 180
-kit.servo[WRIST].angle = 175
-kit.servo[ELBOW].angle = 90
-kit.servo[SHOLDER_UP_DOWN].angle = 90
-
-kit.servo[ROTATE].angle = 90
+#kit.servo[ROTATE].angle = 90
 
 
