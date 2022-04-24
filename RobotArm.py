@@ -46,9 +46,14 @@ class RobotArm:
     
         
         
+    def setState(self, rotate, shoulder, elbow, wrist, grip):
+        self.Rotate(rotate)
+        self.Shoulder(shoulder)
+        self.Elbow(elbow)
+        self.Wrist(wrist)
+        self.Grip(grip)
+
     
-
-
     def Shoulder(self, angle):
         self.shoulder.setAngle(angle)
 
@@ -59,7 +64,9 @@ class RobotArm:
         self.wrist.setAngle(angle)
 
     def Elbow(self, angle):
+        print("was", self.elbow.getAngle(), angle)
         self.elbow.setAngle(angle)
+        print("now", self.elbow.getAngle())
 
     def Rotate(self, angle):
         self.rotate.setAngle(angle)

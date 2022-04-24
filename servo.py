@@ -5,7 +5,7 @@ a = RobotArm()
 
 #while True:
 time.sleep(0.5)
-a.demo()
+a.setState(RobotArm.ROTATE_NORMAL, 0.5, 0.5, 0.5, 0)
 
 #a.downShoulder()
 #time.sleep(0.5)
