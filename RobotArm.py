@@ -37,21 +37,16 @@ class RobotArm:
         self.wrist = ServoJoint(self.kit, 0, 0, 90, 180)
         self.grip = ServoJoint(self.kit, 12, 60, 120, 180)
 
+        self.lowerArmBone = Bone(self.shoulder, 20, 1.0, 0)
+        self.upperArmBone = Bone(self.elbow, 20, -1.0, 0)
+        self.wristBone =    Bone(self.wrist, 5, 1.0, -math.pi/2)
 
-
-        lowerArmBone = Bone(self.shoulder, 20, 1.0, 0)
-        upperArmBone = Bone(self.elbow, 20, -1.0, 0)
-        wristBone =    Bone(self.wrist, 5, 1.0, -math.pi/2)
-
-        upperArmBone.setParent(lowerArmBone)
-
+        self.upperArmBone.setParent(self.lowerArmBone)  
+        self.wristBone.setParent(self.upperArmBone)
+    
         
-        wristBone.setParent(upperArmBone)
-
         
-        print(lowerArmBone, upperArmBone, wristBone)
-        
-
+    
 
 
     def Shoulder(self, angle):
@@ -75,27 +70,37 @@ class RobotArm:
         self.Grip(self.GRIP_CLOSED)
         time.sleep(1.5)
         self.Grip(self.GRIP_OPEN)
+        
 
         time.sleep(1.5)
         self.Wrist(self.WRIST_FULLY_DOWN)
+        print("wrist down", self.wristBone)
         time.sleep(1.5)
         self.Wrist(self.WRIST_FULLY_UP)
+        print("wrist up", self.wristBone)
         time.sleep(1.5)
         self.Wrist(self.WRIST_NEUTRAL)
+        print("wrist neutral", self.wristBone)
 
         time.sleep(1.5)
         self.Elbow(self.ELBOW_FULLY_OPEN)
+        print("elbow open", self.wristBone)
         time.sleep(1.5)
         self.Elbow(self.ELBOW_FULLY_CLOSED)
+        print("elbow closed", self.wristBone)
         time.sleep(1.5)
         self.Elbow(self.ELBOW_90_DEG)
+        print("wrist neutral", self.wristBone)
 
         time.sleep(1.5)
         self.Shoulder(self.SHOULDER_FORWARD)
+        print("shoulder forward", self.wristBone)
         time.sleep(1.5)
         self.Shoulder(self.SHOULDER_BACKWARD)
+        print("shoulder back", self.wristBone)
         time.sleep(1.5)
         self.Shoulder(self.SHOULDER_UP)
+        print("shoulder straight", self.wristBone)
 
         time.sleep(1.5)
         self.Rotate(self.ROTATE_FULLY_LEFT)
