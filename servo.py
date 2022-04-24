@@ -1,7 +1,9 @@
+from adafruit_servokit import ServoKit
 from RobotArm import RobotArm
 import time
-    
-a = RobotArm()
+
+kit = ServoKit(channels=16)
+a = RobotArm(kit)
 
 #while True:
 time.sleep(0.5)

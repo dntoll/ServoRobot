@@ -1,4 +1,4 @@
-from adafruit_servokit import ServoKit
+
 from ServoJoint import ServoJoint
 
 from Bone import Bone
@@ -9,7 +9,7 @@ import time
 import math 
 
 class RobotArm:
-    kit = ServoKit(channels=16)
+    
 
     ROTATE_FULLY_LEFT = 180
     ROTATE_FULLY_RIGHT = 0
@@ -30,7 +30,8 @@ class RobotArm:
     WRIST_NEUTRAL = 90
     WRIST_FULLY_UP = 180
 
-    def __init__(self):
+    def __init__(self, kit):
+        self.kit = kit
         self.rotate = ServoJoint(self.kit, 15, 0, 60, 180)
         self.shoulder = ServoJoint(self.kit, 8, 60, 90, 145)
         self.elbow = ServoJoint(self.kit, 4, 10, 90, 180)
@@ -53,6 +54,8 @@ class RobotArm:
         self.Wrist(wrist)
         self.Grip(grip)
 
+        print("shoulder straight", self.wristBone)
+
     
     def Shoulder(self, angle):
         self.shoulder.setAngle(angle)
@@ -64,9 +67,7 @@ class RobotArm:
         self.wrist.setAngle(angle)
 
     def Elbow(self, angle):
-        print("was", self.elbow.getAngle(), angle)
         self.elbow.setAngle(angle)
-        print("now", self.elbow.getAngle())
 
     def Rotate(self, angle):
         self.rotate.setAngle(angle)
