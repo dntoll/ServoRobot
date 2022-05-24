@@ -1,10 +1,11 @@
 from RobotArm import RobotArm
+from adafruit_servokit import ServoKit
 from getkey import getkey, keys
 import time
 
-
+kit = ServoKit(channels=16)
 keyPressStart = time.time()
-robot = RobotArm()
+robot = RobotArm(kit)
 numSame = 0
 
 s = 90
