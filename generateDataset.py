@@ -21,7 +21,7 @@ kit = ServoKit(channels=16)
 a = RobotArm(kit)
 b = RobotArm(fake)
 
-NUM_CASES = 10
+NUM_CASES = 1000
 
 def randomizeUntilValid():
     
