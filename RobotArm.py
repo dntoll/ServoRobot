@@ -8,6 +8,9 @@ from Bone import Bone
 import time 
 import math 
 
+
+
+
 class RobotArm:
     
 
@@ -54,7 +57,7 @@ class RobotArm:
         self.Wrist(wrist)
         self.Grip(grip)
 
-        print("shoulder straight", self.wristBone)
+        #print("shoulder straight", self.wristBone)
 
     
     def Shoulder(self, angle):

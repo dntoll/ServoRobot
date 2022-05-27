@@ -10,3 +10,6 @@ https://raspberrypi-guide.github.io/electronics/using-usb-webcams
 
 https://pyimagesearch.com/2014/09/29/finding-brightest-spot-image-using-python-opencv/
 https://pyimagesearch.com/2016/10/31/detecting-multiple-bright-spots-in-an-image-with-python-and-opencv/
+
+
+https://scikit-learn.org/stable/modules/generated/sklearn.cross_decomposition.PLSRegression.html
