@@ -16,27 +16,50 @@ class FakeKit:
         for i in range(16):
             self.servo.append(FakeServo())
     
-
+lowerhalfOfImage = np.array([[0, 550], [959, 550], [959, 719], [0, 719]])
 fake = FakeKit()
 b = RobotArm(fake)
 r = 5
 
-X = []
-TX =[]
-Y = []
+X = [] #Position in imaage
+TX =[] #Robot arm belief position (forward kinematics)
+Y = [] #sev (shoulder, elbow, wrist)
 
-for filename in glob.glob('images/*.jpg'):
+images = glob.glob('images/*.jpg')
+"""
+image_data = []
+for img in images:
+    this_image = cv2.imread(img, 1)
+    image_data.append(this_image)
+
+avg_image = image_data[0]
+for i in range(len(image_data)):
+    if i == 0:
+        pass
+    else:
+        alpha = 1.0/(i + 1)
+        beta = 1.0 - alpha
+        avg_image = cv2.addWeighted(image_data[i], alpha, avg_image, beta, 0.0)
+
+cv2.imshow("Robust", avg_image)
+cv2.waitKey(0)
+"""
+for filename in images:
     # load the image and convert it to grayscale
     image = cv2.imread(filename)
     orig = image.copy()
-    red_channel = image[:,:,2]
+    red_channel = orig[:,:,2]
     gray = cv2.GaussianBlur(red_channel, (r, r), 0)
-    (minVal, maxVal, minLoc, maxLoc) = cv2.minMaxLoc(red_channel)
+    cv2.fillPoly(gray, [lowerhalfOfImage],  color=(0, 0, 0))
+    (minVal, maxVal, minLoc, maxLoc) = cv2.minMaxLoc(gray)
     
-    #image = orig.copy()
-    #cv2.circle(image, maxLoc, r, (255, 0, 0), 2)
+    #showImage = gray.copy()
+    #cv2.circle(showImage, maxLoc, r, (255, 0, 0), 1)
     # display the results of our newly improved method
-    #cv2.imshow("Robust", image)
+    
+    
+   
+    #cv2.imshow("Robust", showImage)
     #cv2.waitKey(0)
     
     #images\9_s98_e81_w52.jpg
@@ -53,13 +76,8 @@ for filename in glob.glob('images/*.jpg'):
     Y.append([s,e,w])
     X.append(maxLoc)
     TX.append([b.wristBone.getPos().x, b.wristBone.getPos().y])
+
+import json
+with open("robotArmDataSet.json", "w") as fp:
+    json.dump([X, TX, Y], fp)
 #https://scikit-learn.org/stable/modules/generated/sklearn.cross_decomposition.PLSRegression.html
-from sklearn.cross_decomposition import PLSRegression
-
-pls2 = PLSRegression(n_components=2)
-pls2.fit(X, Y)
-Y_pred = pls2.predict(X)
-#print(Y)
-#print(Y_pred)
-
-import matplotlib.pyplot as plt
