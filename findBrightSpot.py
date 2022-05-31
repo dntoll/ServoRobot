@@ -4,17 +4,7 @@ import cv2
 import glob
 import re
 from RobotArm import RobotArm
-
-
-class FakeServo:
-    angle = 0
-
-class FakeKit:
-    servo = []
-
-    def __init__(self):
-        for i in range(16):
-            self.servo.append(FakeServo())
+from FakeKit import FakeKit
     
 lowerhalfOfImage = np.array([[0, 550], [959, 550], [959, 719], [0, 719]])
 fake = FakeKit()

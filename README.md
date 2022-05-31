@@ -1,7 +1,7 @@
 https://learn.adafruit.com/adafruit-16-channel-pwm-servo-hat-for-raspberry-pi/attach-and-test-the-hat
 
 
-
+# On pi
 sudo apt install fswebcam
 
 https://raspberrypi-guide.github.io/electronics/using-usb-webcams
@@ -13,3 +13,7 @@ https://pyimagesearch.com/2016/10/31/detecting-multiple-bright-spots-in-an-image
 
 
 https://scikit-learn.org/stable/modules/generated/sklearn.cross_decomposition.PLSRegression.html
+
+# install
+pip install -U scikit-learn
+pip install opencv-python-headless
