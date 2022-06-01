@@ -59,7 +59,16 @@ class RobotArm:
 
         #print("shoulder straight", self.wristBone)
     
-    def setPos(self, x, y):
+    def setPos(self, tipx, tipy, wristWorldAngleRadians):
+
+
+        dy = self.wristBone.length * math.sin(wristWorldAngleRadians)
+        dx = self.wristBone.length * math.cos(wristWorldAngleRadians)
+
+        x = tipx-dx
+        y = tipy-dy
+
+        print(tipx, tipy, x, y)
         #https://www.researchgate.net/publication/328583527_A_Geometric_Approach_to_Inverse_Kinematics_of_a_3_DOF_Robotic_Arm
 
         r = math.sqrt(x*x + y*y)
@@ -67,23 +76,33 @@ class RobotArm:
         d1 = self.lowerArmBone.length
         d2 = self.upperArmBone.length
 
-        elbow = - math.acos( (x*x + y*y - d1*d1*d2*d2) / (2 * d1 * d2) )
-        shoulder = 
+        #https://en.wikipedia.org/wiki/Law_of_cosines
+        #temp = (x*x + y*y - d1*d1*d2*d2) / (2.0 * d1 * d2)
+        temp = (d1*d1+d2*d2-r*r) / (2.0 * d1 * d2)
+
+        print(d1, d2, temp)
+        elbow = math.pi - math.acos( temp )
+        shoulder = math.asin(y/r) + math.atan(d2*math.sin(elbow)/(d1 + d2*math.cos(elbow)))
+
+        self.elbow.setAngleRadians(elbow)
+        self.shoulder.setAngleRadians(shoulder)
+        self.wristBone.setWorldAngleRadians(wristWorldAngleRadians)
+
     
     def Shoulder(self, angle):
-        self.shoulder.setAngle(angle)
+        self.shoulder.setAngleDegrees(angle)
 
     def Grip(self, angle):
-        self.grip.setAngle(angle)
+        self.grip.setAngleDegrees(angle)
 
     def Wrist(self, angle):
-        self.wrist.setAngle(angle)
+        self.wrist.setAngleDegrees(angle)
 
     def Elbow(self, angle):
-        self.elbow.setAngle(angle)
+        self.elbow.setAngleDegrees(angle)
 
     def Rotate(self, angle):
-        self.rotate.setAngle(angle)
+        self.rotate.setAngleDegrees(angle)
 
     def demo(self):
         self.Grip(self.GRIP_OPEN)

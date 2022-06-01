@@ -9,29 +9,31 @@ class ServoJoint:
         self.neutral = neutral
         self.max = max
 
-        self.setAngle(self.neutral)
+        self.setAngleDegrees(self.neutral)
 
 
     def setInterpolation(self, interpolatedValue):
         myRange = self.max - self.min
         angle = self.min + interpolatedValue * myRange
 
-        self.setAngle(angle)
+        self.setAngleDegrees(angle)
 
-    def setAngle(self, newAngle):
+    def setAngleDegrees(self, newAngle):
         if newAngle < self.min:
+            print("minValue found", newAngle , self.min)
             newAngle = self.min
         if newAngle > self.max:
+            print("maxValue found", newAngle , self.max)
             newAngle = self.max
-
+        
         self.kit.servo[self.index].angle = newAngle
         self.lastKnownAngle = newAngle
 
     def setAngleRadians(self, radians):
-        degrees = radians * 360.0 / 2.0 * math.pi
-        self.setAngle(degrees)
+        degrees = (radians * 360.0) / (2.0 * math.pi)
+        self.setAngleDegrees(degrees)
     
-    def getAngle(self):
+    def getAngleDegrees(self):
         return self.lastKnownAngle
 
     def getAngleRadians(self):

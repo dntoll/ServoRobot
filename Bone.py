@@ -15,16 +15,31 @@ class Bone:
         self.parent = parent
 
 
-    def getWorldAngle(self):
+    def getWorldAngleRadians(self):
 
         relativeAngle = self.joint.getAngleRadians() * self.angleConversion + self.angleAddition
         if self.parent != False:
-            return self.parent.getWorldAngle() + relativeAngle
+            return self.parent.getWorldAngleRadians() + relativeAngle
         else:
             return relativeAngle
 
+    def setWorldAngleRadians(self, worldAngle):
+
+        while worldAngle > math.pi*2.0:
+            worldAngle -= math.pi*2.0
+        while worldAngle > math.pi*2.0:
+            worldAngle -= math.pi*2.0
+
+        if self.parent != False:
+            relativeAngle = worldAngle - self.parent.getWorldAngleRadians()
+
+            actualAngle = (relativeAngle - self.angleAddition)/self.angleConversion
+            self.joint.setAngleRadians(actualAngle)
+        else:
+            self.joint.setAngleRadians(worldAngle)
+
     def getPos(self):
-        worldAngle = self.getWorldAngle()
+        worldAngle = self.getWorldAngleRadians()
 
         if self.parent != False:
             return self.parent.getPos().add( Vector3(math.cos(worldAngle), math.sin(worldAngle), 0).mul(self.length) )
