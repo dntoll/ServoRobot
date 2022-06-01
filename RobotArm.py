@@ -58,7 +58,17 @@ class RobotArm:
         self.Grip(grip)
 
         #print("shoulder straight", self.wristBone)
+    
+    def setPos(self, x, y):
+        #https://www.researchgate.net/publication/328583527_A_Geometric_Approach_to_Inverse_Kinematics_of_a_3_DOF_Robotic_Arm
 
+        r = math.sqrt(x*x + y*y)
+
+        d1 = self.lowerArmBone.length
+        d2 = self.upperArmBone.length
+
+        elbow = - math.acos( (x*x + y*y - d1*d1*d2*d2) / (2 * d1 * d2) )
+        shoulder = 
     
     def Shoulder(self, angle):
         self.shoulder.setAngle(angle)
