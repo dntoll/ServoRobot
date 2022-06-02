@@ -2,9 +2,11 @@ from RobotArm import RobotArm
 from RobotArmView import RobotArmView
 
 try:
+    real = True
     from adafruit_servokit import ServoKit
     kit = ServoKit(channels=16)
 except:
+    real = False
     from FakeKit import FakeKit    
     kit = FakeKit()
 
@@ -25,10 +27,10 @@ def parseInput(bytes):
     return x, y, w
 
 
-
-view.draw()
-view.show()
-view.showWindow()
+if real is False:
+    view.draw()
+    view.show()
+    view.showWindow()
 
 while True:
     print("Waiting for client:", flush=True)
@@ -46,6 +48,7 @@ while True:
 
                 print("parsed", x, y, w, flush=True)
                 robot.setPos(x, y, w)
-                view.draw()
-                view.show()
+                if real is False:
+                    view.draw()
+                    view.show()
                 conn.sendall(data)
