@@ -1,21 +1,25 @@
 from RobotArm import RobotArm
-from RobotArmView import RobotArmView
+
 
 try:
     real = True
     from adafruit_servokit import ServoKit
     kit = ServoKit(channels=16)
+    robot = RobotArm(kit)
 except:
+    from RobotArmView import RobotArmView
     real = False
     from FakeKit import FakeKit    
     kit = FakeKit()
+    robot = RobotArm(kit)
+    view = RobotArmView(robot)
 
 import time
 
 
 keyPressStart = time.time()
-robot = RobotArm(kit)
-view = RobotArmView(robot)
+
+
 
 import socket
 
