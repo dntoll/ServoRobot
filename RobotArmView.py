@@ -7,9 +7,9 @@ class RobotArmView:
 
     def __init__(self, robotArm):
         self.arm = robotArm
-        height = 512
-        width = 512
-        self.img = np.zeros((height,width,3), np.uint8)
+        self.height = 512
+        self.width = 512
+        
 
     def draw(self):
         
@@ -24,7 +24,7 @@ class RobotArmView:
 
         start_point = (250, 250)
         color = (0, 255, 0)
-
+        self.img = np.zeros((self.height, self.width, 3), np.uint8)
         for bone in bones:
 
             bone = bone.mul(-5).add(Vector3(250, 250, 0))
@@ -33,6 +33,12 @@ class RobotArmView:
             thickness = 1
             image = cv2.line(self.img, start_point, end_point, color, thickness)
             start_point = end_point
+
     def show(self):
         plt.imshow(self.img)
+        plt.pause(0.1)
+
+    def showWindow(self):
+        plt.show(block=False)
+        plt.ion()
 

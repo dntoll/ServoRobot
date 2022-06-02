@@ -16,7 +16,7 @@ TX =[] #Robot arm belief position (forward kinematics)
 Y = [] #sev (shoulder, elbow, wrist)
 
 images = glob.glob('images/*.jpg')
-"""
+
 image_data = []
 for img in images:
     this_image = cv2.imread(img, 1)
@@ -33,8 +33,8 @@ for i in range(len(image_data)):
 
 cv2.imshow("Robust", avg_image)
 cv2.waitKey(0)
-"""
-for filename in images:
+
+"""for filename in images:
     # load the image and convert it to grayscale
     image = cv2.imread(filename)
     orig = image.copy()
@@ -70,4 +70,4 @@ for filename in images:
 import json
 with open("robotArmDataSet.json", "w") as fp:
     json.dump([X, TX, Y], fp)
-#https://scikit-learn.org/stable/modules/generated/sklearn.cross_decomposition.PLSRegression.html
+#https://scikit-learn.org/stable/modules/generated/sklearn.cross_decomposition.PLSRegression.html"""
