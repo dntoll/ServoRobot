@@ -7,6 +7,7 @@ from RobotArmView import RobotArmView
 import time
 import socket
 import json
+import sys
 
 fake = FakeKit()
 robot = RobotArm(fake)
@@ -98,6 +99,8 @@ mlistener = mouse.Listener(
     on_scroll=on_scroll)
 mlistener.start()
 
+
+
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     print("try to join")
         
@@ -106,10 +109,14 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     print("connected")
     globalS = s
     while True:
-        time.sleep(0.1)
+        try:
+            time.sleep(0.1)
 
-        view.draw()
-        view.show()
+            view.draw()
+            view.show()
+        except KeyboardInterrupt:
+            sys.exit(0)
+        
     
 
         

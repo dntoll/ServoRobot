@@ -2,6 +2,7 @@ from RobotArm import RobotArm
 import json
 import socket
 import time
+import sys
 
 try:
     real = True
@@ -58,5 +59,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                         view.draw()
                         view.show()
                     conn.sendall(data)
+        except KeyboardInterrupt:
+            # quit
+            sys.exit()
         except:
             print("shit happened")
