@@ -56,8 +56,8 @@ def sendPos(s, x, y, w):
     if w < 0:
         w += 6.28
 
-    payload = {"x": x, "y":y, "w":w}
-    s.send(json.dumps(payload))
+    payload = {"x": x, "y":y, "w": w}
+    s.send(json.dumps(payload).encode('utf-8'))
     data = s.recv(1024)
     print(f"Received {data!r}", flush=True)
 

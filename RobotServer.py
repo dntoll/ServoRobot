@@ -1,5 +1,5 @@
 from RobotArm import RobotArm
-
+import json
 
 try:
     real = True
@@ -31,7 +31,7 @@ PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 
 def parseInput(payload):
 
-    jsonobj = json.loads(payload)
+    jsonobj = json.loads(payload.decode("utf-8"))
 
     x, y, w = jsonobj.x, jsonobj.y, jsonobj.w
     return x, y, w
