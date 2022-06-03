@@ -58,6 +58,13 @@ class RobotArm:
         self.Grip(grip)
 
         #print("shoulder straight", self.wristBone)
+
+    def getPos(self):
+        wp = self.wristBone.getPos()
+
+        
+
+        return wp.x, wp.y, self.wristBone.getWorldAngleRadians()
     
     def setPos(self, tipx, tipy, wristWorldAngleRadians):
 
@@ -65,7 +72,7 @@ class RobotArm:
             dy = self.wristBone.length * math.sin(wristWorldAngleRadians)
             dx = self.wristBone.length * math.cos(wristWorldAngleRadians)
 
-            x = tipx+dx
+            x = tipx-dx
             y = tipy-dy
 
             #print(tipx, tipy, x, y)
