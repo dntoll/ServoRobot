@@ -68,7 +68,7 @@ class RobotArm:
         x = tipx+dx
         y = tipy-dy
 
-        print(tipx, tipy, x, y)
+        #print(tipx, tipy, x, y)
         #https://www.researchgate.net/publication/328583527_A_Geometric_Approach_to_Inverse_Kinematics_of_a_3_DOF_Robotic_Arm
 
         r = math.sqrt(x*x + y*y)
@@ -80,7 +80,7 @@ class RobotArm:
         #temp = (x*x + y*y - d1*d1*d2*d2) / (2.0 * d1 * d2)
         temp = (d1*d1+d2*d2-r*r) / (2.0 * d1 * d2)
 
-        print(d1, d2, temp)
+        #print(d1, d2, temp)
         elbow = math.pi - math.acos( temp )
         shoulder = math.asin(y/r) + math.atan(d2*math.sin(elbow)/(d1 + d2*math.cos(elbow)))
 
