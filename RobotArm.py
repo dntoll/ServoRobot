@@ -80,7 +80,10 @@ class RobotArm:
         #temp = (x*x + y*y - d1*d1*d2*d2) / (2.0 * d1 * d2)
         temp = (d1*d1+d2*d2-r*r) / (2.0 * d1 * d2)
 
-        #print(d1, d2, temp)
+
+        if 1 < temp < -1:
+            print("not possible, value error", temp)
+            return
         elbow = math.pi - math.acos( temp )
         shoulder = math.asin(y/r) + math.atan(d2*math.sin(elbow)/(d1 + d2*math.cos(elbow)))
 
