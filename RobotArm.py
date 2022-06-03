@@ -90,7 +90,7 @@ class RobotArm:
             self.elbow.setAngleRadians(elbow)
             self.shoulder.setAngleRadians(shoulder)
             self.wristBone.setWorldAngleRadians(wristWorldAngleRadians)
-        exept:
+        except:
             print("Value error")
 
     
