@@ -105,11 +105,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
     print("connected")
     globalS = s
+    while True:
+        time.sleep(0.1)
 
-while True:
-    time.sleep(1)
-    """view.draw()
-    view.show()"""
+        view.draw()
+        view.show()
     
 
         

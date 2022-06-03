@@ -42,18 +42,21 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.bind((HOST, PORT))
     s.listen()
     while True:
-        conn, addr = s.accept()
-        with conn:
-            print(f"Connected by {addr}", flush=True)
-            while True:
-                data = conn.recv(1024)
-                if not data:
-                    break
-                x,y,w = parseInput(data)
+        try:
+            conn, addr = s.accept()
+            with conn:
+                print(f"Connected by {addr}", flush=True)
+                while True:
+                    data = conn.recv(1024)
+                    if not data:
+                        break
+                    x,y,w = parseInput(data)
 
-                print("parsed", x, y, w, flush=True)
-                robot.setPos(x, y, w)
-                if real is False:
-                    view.draw()
-                    view.show()
-                conn.sendall(data)
+                    print("parsed", x, y, w, flush=True)
+                    robot.setPos(x, y, w)
+                    if real is False:
+                        view.draw()
+                        view.show()
+                    conn.sendall(data)
+        except:
+            print("shit happened")
