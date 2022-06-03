@@ -13,7 +13,7 @@ y = 20
 w = 3.1415/2.0
 globalS = None
 
-HOST = "127.0.0.1"  # The server's hostname or IP address
+HOST = "192.168.188.96"  # The server's hostname or IP address
 PORT = 65432  # The port used by the server
 
 def on_press(key):

@@ -6,6 +6,7 @@ try:
     from adafruit_servokit import ServoKit
     kit = ServoKit(channels=16)
     robot = RobotArm(kit)
+    HOST = "0.0.0.0"  
 except:
     from RobotArmView import RobotArmView
     real = False
@@ -13,6 +14,7 @@ except:
     kit = FakeKit()
     robot = RobotArm(kit)
     view = RobotArmView(robot)
+    HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
 
 import time
 
@@ -23,7 +25,8 @@ keyPressStart = time.time()
 
 import socket
 
-HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
+
+
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 
 def parseInput(bytes):
