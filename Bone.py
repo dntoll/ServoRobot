@@ -27,8 +27,8 @@ class Bone:
 
         while worldAngle > math.pi*2.0:
             worldAngle -= math.pi*2.0
-        while worldAngle > math.pi*2.0:
-            worldAngle -= math.pi*2.0
+        while worldAngle < 0:
+            worldAngle += math.pi*2.0
 
         if self.parent != False:
             relativeAngle = worldAngle - self.parent.getWorldAngleRadians()
