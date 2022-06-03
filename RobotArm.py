@@ -61,35 +61,37 @@ class RobotArm:
     
     def setPos(self, tipx, tipy, wristWorldAngleRadians):
 
+        try:
+            dy = self.wristBone.length * math.sin(wristWorldAngleRadians)
+            dx = self.wristBone.length * math.cos(wristWorldAngleRadians)
 
-        dy = self.wristBone.length * math.sin(wristWorldAngleRadians)
-        dx = self.wristBone.length * math.cos(wristWorldAngleRadians)
+            x = tipx+dx
+            y = tipy-dy
 
-        x = tipx+dx
-        y = tipy-dy
+            #print(tipx, tipy, x, y)
+            #https://www.researchgate.net/publication/328583527_A_Geometric_Approach_to_Inverse_Kinematics_of_a_3_DOF_Robotic_Arm
 
-        #print(tipx, tipy, x, y)
-        #https://www.researchgate.net/publication/328583527_A_Geometric_Approach_to_Inverse_Kinematics_of_a_3_DOF_Robotic_Arm
+            r = math.sqrt(x*x + y*y)
 
-        r = math.sqrt(x*x + y*y)
+            d1 = self.lowerArmBone.length
+            d2 = self.upperArmBone.length
 
-        d1 = self.lowerArmBone.length
-        d2 = self.upperArmBone.length
-
-        #https://en.wikipedia.org/wiki/Law_of_cosines
-        #temp = (x*x + y*y - d1*d1*d2*d2) / (2.0 * d1 * d2)
-        temp = (d1*d1+d2*d2-r*r) / (2.0 * d1 * d2)
+            #https://en.wikipedia.org/wiki/Law_of_cosines
+            #temp = (x*x + y*y - d1*d1*d2*d2) / (2.0 * d1 * d2)
+            temp = (d1*d1+d2*d2-r*r) / (2.0 * d1 * d2)
 
 
-        if 1 < temp < -1:
-            print("not possible, value error", temp)
-            return
-        elbow = math.pi - math.acos( temp )
-        shoulder = math.asin(y/r) + math.atan(d2*math.sin(elbow)/(d1 + d2*math.cos(elbow)))
+            if 1 < temp < -1:
+                print("not possible, value error", temp)
+                return
+            elbow = math.pi - math.acos( temp )
+            shoulder = math.asin(y/r) + math.atan(d2*math.sin(elbow)/(d1 + d2*math.cos(elbow)))
 
-        self.elbow.setAngleRadians(elbow)
-        self.shoulder.setAngleRadians(shoulder)
-        self.wristBone.setWorldAngleRadians(wristWorldAngleRadians)
+            self.elbow.setAngleRadians(elbow)
+            self.shoulder.setAngleRadians(shoulder)
+            self.wristBone.setWorldAngleRadians(wristWorldAngleRadians)
+        exept:
+            print("Value error")
 
     
     def Shoulder(self, angle):
