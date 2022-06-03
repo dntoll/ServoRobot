@@ -19,12 +19,12 @@ class ServoJoint:
         self.setAngleDegrees(angle)
 
     def setAngleDegrees(self, newAngle):
-        if newAngle < self.min:
+        """if newAngle < self.min:
             print("minValue found", newAngle , self.min)
             newAngle = self.min
         if newAngle > self.max:
             print("maxValue found", newAngle , self.max)
-            newAngle = self.max
+            newAngle = self.max"""
         
         self.kit.servo[self.index].angle = newAngle
         self.lastKnownAngle = newAngle

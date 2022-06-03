@@ -32,13 +32,13 @@ def on_move(mx, my):
         (mx, my)))
 
     if firstMove is False:
-        dx = mx-omx
-        dy = -(my-omy)
+        dx = -(mx-omx)/10
+        dy = -(my-omy)/10
 
         print("deltamove", dx, dy)
 
-        x += dx/10
-        y += dy/10
+        x += dx
+        y += dy
         sendPos(globalS, x, y, w)
     firstMove = False
     omx = mx

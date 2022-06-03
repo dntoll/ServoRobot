@@ -1,5 +1,7 @@
 from RobotArm import RobotArm
 import json
+import socket
+import time
 
 try:
     real = True
@@ -16,17 +18,8 @@ except:
     view = RobotArmView(robot)
     HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
 
-import time
-
 
 keyPressStart = time.time()
-
-
-
-import socket
-
-
-
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 
 def parseInput(payload):
