@@ -29,8 +29,11 @@ import socket
 
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 
-def parseInput(bytes):
-    x, y, w = bytes[0], bytes[1], 6.28*float((bytes[2]))/255.0
+def parseInput(payload):
+
+    jsonobj = json.loads(payload)
+
+    x, y, w = jsonobj.x, jsonobj.y, jsonobj.w
     return x, y, w
 
 

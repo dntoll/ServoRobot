@@ -4,13 +4,14 @@ from pynput import keyboard
 from pynput.keyboard import Key
 import time
 import socket
+import json
 
 fake = FakeKit()
 robot = RobotArm(fake)
 
 x = 20
 y = 20
-w = 3.1415/2.0
+w = 0
 globalS = None
 
 HOST = "192.168.188.96"  # The server's hostname or IP address
@@ -54,7 +55,9 @@ def sendPos(s, x, y, w):
     robot.setPos(x, y, w)
     if w < 0:
         w += 6.28
-    s.send(bytes([int(x),int(y), int((w/6.28)*255)]))
+
+    payload = {"x": x, "y":y, "w":w}
+    s.send(json.dumps(payload))
     data = s.recv(1024)
     print(f"Received {data!r}", flush=True)
 
