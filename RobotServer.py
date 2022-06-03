@@ -33,7 +33,7 @@ def parseInput(payload):
 
     jsonobj = json.loads(payload.decode("utf-8"))
 
-    x, y, w = jsonobj.x, jsonobj.y, jsonobj.w
+    x, y, w = jsonobj["x"], jsonobj["y"], jsonobj["w"]
     return x, y, w
 
 
