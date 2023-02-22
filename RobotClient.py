@@ -1,3 +1,5 @@
+print("Hej")
+
 from RobotArm import RobotArm
 from FakeKit import FakeKit    
 from pynput import keyboard
@@ -9,9 +11,15 @@ import socket
 import json
 import sys
 
+
+
+
+
 fake = FakeKit()
 robot = RobotArm(fake)
 view = RobotArmView(robot)
+
+
 
 x = 20
 y = 20
@@ -21,9 +29,7 @@ globalS = None
 HOST = "192.168.188.96"  # The server's hostname or IP address
 PORT = 65432  # The port used by the server
 
-view.draw()
-view.show()
-view.showWindow()
+
 
 omx = 0
 omy = 0
@@ -91,13 +97,9 @@ def sendPos(s, x, y, w):
     data = s.recv(1024)
     print(f"Received {data!r}", flush=True)
 
-
+print("Hej")
     
-mlistener = mouse.Listener(
-    on_move=on_move,
-    on_click=on_click,
-    on_scroll=on_scroll)
-mlistener.start()
+
 
 
 
@@ -106,12 +108,22 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         
     s.connect((HOST, PORT))
 
+    view.draw()
+    view.show()
+    view.showWindow()
+
+    mlistener = mouse.Listener(
+    on_move=on_move,
+    on_click=on_click,
+    on_scroll=on_scroll)
+    mlistener.start()
+
     print("connected")
     globalS = s
     while True:
         try:
             time.sleep(0.1)
-
+            
             view.draw()
             view.show()
         except KeyboardInterrupt:
