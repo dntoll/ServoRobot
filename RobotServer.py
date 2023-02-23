@@ -53,7 +53,8 @@ print("Waiting for client:", flush=True)
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.bind((HOST, PORT))
     s.listen()
-    while True:
+    doContinue = True
+    while doContinue:
         try:
             conn, addr = s.accept()
             with conn:
@@ -72,7 +73,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                         view.show()
                     conn.sendall(data)
         except KeyboardInterrupt:
+            view.close()
             # quit
             sys.exit()
+            doContinue = False
         except:
             print("shit happened")

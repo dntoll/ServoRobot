@@ -10,6 +10,7 @@ class RobotArmView:
         self.height = 512
         self.width = 512
         
+        
 
     def draw(self):
         
@@ -41,4 +42,7 @@ class RobotArmView:
     def showWindow(self):
         plt.show(block=False)
         plt.ion()
+        
+    def close(self):
+        plt.close('all')
 

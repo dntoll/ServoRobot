@@ -1,5 +1,3 @@
-print("Hej")
-
 from RobotArm import RobotArm
 from FakeKit import FakeKit    
 from pynput import keyboard
@@ -11,15 +9,9 @@ import socket
 import json
 import sys
 
-
-
-
-
 fake = FakeKit()
 robot = RobotArm(fake)
 view = RobotArmView(robot)
-
-
 
 x = 20
 y = 20
@@ -28,8 +20,6 @@ globalS = None
 
 HOST = "192.168.188.96"  # The server's hostname or IP address
 PORT = 65432  # The port used by the server
-
-
 
 omx = 0
 omy = 0
@@ -41,8 +31,7 @@ def on_move(mx, my):
     global omx
     global omy 
     global firstMove
-    print('Pointer moved to {0}'.format(
-        (mx, my)))
+    print('Pointer moved to {0}'.format((mx, my)))
 
     if firstMove is False:
         dx = -(mx-omx)/10
@@ -95,7 +84,7 @@ def sendPos(s, x, y, w):
     jsonString += "\n"
     s.send(jsonString.encode('utf-8'))
     data = s.recv(1024)
-    print(f"Received {data!r}", flush=True)
+    #print(f"Received {data!r}", flush=True)
 
 print("Hej")
     
