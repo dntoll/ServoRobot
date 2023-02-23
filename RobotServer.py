@@ -40,6 +40,10 @@ if real is False:
 
 def RobotUpdate(robot):
     print("Updating")
+    while True:
+        robot.update()
+        time.sleep(1)
+
 
 
 t = Thread(target=RobotUpdate, args=[robot])

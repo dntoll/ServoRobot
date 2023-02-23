@@ -61,10 +61,14 @@ class RobotArm:
 
     def getPos(self):
         wp = self.wristBone.getPos()
-
-        
-
         return wp.x, wp.y, self.wristBone.getWorldAngleRadians()
+    
+    def update(self):
+        self.rotate.update()
+        self.shoulder.update()
+        self.elbow.update()
+        self.wrist.update()
+        self.grip.update()
     
     def setPos(self, tipx, tipy, wristWorldAngleRadians):
 

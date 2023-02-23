@@ -8,7 +8,8 @@ class ServoJoint:
         self.min = min 
         self.neutral = neutral
         self.max = max
-
+        self.lastKnownAngle = min
+        self.targetAngle = neutral
         self.setAngleDegrees(self.neutral)
 
 
@@ -26,8 +27,8 @@ class ServoJoint:
             print("maxValue found", newAngle , self.max)
             newAngle = self.max
         
-        self.kit.servo[self.index].angle = newAngle
-        self.lastKnownAngle = newAngle
+        
+        self.targetAngle = newAngle
 
     def setAngleRadians(self, radians):
         degrees = (radians * 360.0) / (2.0 * math.pi)
@@ -42,4 +43,15 @@ class ServoJoint:
     def addJoint(self, where, howRotate, joint):
         self.whereIsJointAttached = where
         self.howDoesItRotateAround = howRotate
+
+    def update(self):
+
+        if self.targetAngle > self.lastKnownAngle + 1:
+            self.lastKnownAngle += 1
+        elif self.targetAngle < self.lastKnownAngle -1 :
+            self.lastKnownAngle -= 1
+        else:
+            self.lastKnownAngle = self.targetAngle
+            
+        self.kit.servo[self.index].angle = self.lastKnownAngle
 
