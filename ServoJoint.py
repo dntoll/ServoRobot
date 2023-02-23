@@ -35,22 +35,22 @@ class ServoJoint:
         self.setAngleDegrees(degrees)
     
     def getAngleDegrees(self):
-        return self.lastKnownAngle
+        return self.targetAngle
 
     def getAngleRadians(self):
-        return self.lastKnownAngle * math.pi * 2.0 / 360.0
+        return self.targetAngle * math.pi * 2.0 / 360.0
     
     def addJoint(self, where, howRotate, joint):
         self.whereIsJointAttached = where
         self.howDoesItRotateAround = howRotate
 
     def update(self):
-
-        if self.targetAngle > self.lastKnownAngle + 5:
-            self.lastKnownAngle += 5
+        maxChangeAngle = 5
+        if self.targetAngle > self.lastKnownAngle + maxChangeAngle:
+            self.lastKnownAngle += maxChangeAngle
             print("increased angle")
-        elif self.targetAngle < self.lastKnownAngle -5 :
-            self.lastKnownAngle -= 5
+        elif self.targetAngle < self.lastKnownAngle - maxChangeAngle :
+            self.lastKnownAngle -= maxChangeAngle
             print("reduced angle")
         else:
             self.lastKnownAngle = self.targetAngle
