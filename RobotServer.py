@@ -1,4 +1,5 @@
 from RobotArm import RobotArm
+from threading import Thread
 import json
 import socket
 import time
@@ -37,6 +38,12 @@ if real is False:
     view.show()
     view.showWindow()
 
+def RobotUpdate(robot):
+    print("Updating")
+
+
+t = Thread(target=RobotUpdate, args=[robot])
+t.start()
 
 print("Waiting for client:", flush=True)
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
