@@ -42,7 +42,7 @@ def RobotUpdate(robot):
     print("Updating")
 
 
-t = Thread(target=RobotUpdate, args=[robot])
+t = Thread(target=RobotUpdate, args=(robot))
 t.start()
 
 print("Waiting for client:", flush=True)
