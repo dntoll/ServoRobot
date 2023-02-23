@@ -8,7 +8,7 @@ class ServoJoint:
         self.min = min 
         self.neutral = neutral
         self.max = max
-        self.lastKnownAngle = min
+        self.lastKnownAngle = neutral
         self.targetAngle = neutral
         self.setAngleDegrees(self.neutral)
 
