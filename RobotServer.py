@@ -43,6 +43,7 @@ def RobotUpdate(robot):
     while True:
         robot.update()
         time.sleep(1)
+        print("Updating")
 
 
 
