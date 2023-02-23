@@ -46,11 +46,11 @@ class ServoJoint:
 
     def update(self):
 
-        if self.targetAngle > self.lastKnownAngle + 1:
-            self.lastKnownAngle += 1
+        if self.targetAngle > self.lastKnownAngle + 5:
+            self.lastKnownAngle += 5
             print("increased angle")
-        elif self.targetAngle < self.lastKnownAngle -1 :
-            self.lastKnownAngle -= 1
+        elif self.targetAngle < self.lastKnownAngle -5 :
+            self.lastKnownAngle -= 5
             print("reduced angle")
         else:
             self.lastKnownAngle = self.targetAngle
