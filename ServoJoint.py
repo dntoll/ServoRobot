@@ -48,8 +48,10 @@ class ServoJoint:
 
         if self.targetAngle > self.lastKnownAngle + 1:
             self.lastKnownAngle += 1
+            print("increased angle")
         elif self.targetAngle < self.lastKnownAngle -1 :
             self.lastKnownAngle -= 1
+            print("reduced angle")
         else:
             self.lastKnownAngle = self.targetAngle
             
