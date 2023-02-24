@@ -79,5 +79,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             # quit
             sys.exit()
             doContinue = False
-        except:
-            print("shit happened")
+        except Exception as e:
+            
+            print("shit happened", e)
