@@ -11,7 +11,7 @@ import sys
 
 fake = FakeKit()
 robot = RobotArm(fake)
-view = RobotArmView(robot)
+
 
 x = 20
 y = 20
@@ -91,7 +91,7 @@ def sendPos(s, x, y, w):
 print("Hej")
     
 
-
+from tkinter import Tk
 
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -99,9 +99,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         
     s.connect((HOST, PORT))
 
-    view.draw()
-    view.show()
-    view.showWindow()
+    root = Tk()
+    view = RobotArmView(robot, root)
 
     mlistener = mouse.Listener(
     on_move=on_move,
@@ -116,7 +115,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             time.sleep(0.1)
             
             view.draw()
-            view.show()
+            
         except KeyboardInterrupt:
             sys.exit(0)
         
