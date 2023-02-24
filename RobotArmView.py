@@ -9,7 +9,7 @@ class RobotArmView:
         self.arm = robotArm
         self.height = 512
         self.width = 512
-        
+        self.target = (0, 0)
         
 
     def draw(self):
@@ -34,7 +34,12 @@ class RobotArmView:
             thickness = 1
             image = cv2.line(self.img, start_point, end_point, color, thickness)
             start_point = end_point
+        
+        viewTarget = (self.target[0] * -5 + 250, self.target[1]*-5+250)
+        cv2.circle(self.img, viewTarget, 5, color, thickness)
 
+    def setPos(self, x, y, w):
+        self.target = (int(x), int(y))
     def show(self):
         plt.imshow(self.img)
         plt.pause(0.1)
@@ -42,7 +47,7 @@ class RobotArmView:
     def showWindow(self):
         plt.show(block=False)
         plt.ion()
-        
+
     def close(self):
         plt.close('all')
 

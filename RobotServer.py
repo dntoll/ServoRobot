@@ -68,11 +68,13 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
                     print("parsed", x, y, w, flush=True)
                     robot.setPos(x, y, w)
+                    view.setPos(x,y,w)
                     if real is False:
                         view.draw()
                         view.show()
                     conn.sendall(data)
         except KeyboardInterrupt:
+            print("keyboard shit")
             view.close()
             # quit
             sys.exit()

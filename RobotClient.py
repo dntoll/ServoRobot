@@ -31,6 +31,7 @@ def on_move(mx, my):
     global omx
     global omy 
     global firstMove
+    global view
     print('Pointer moved to {0}'.format((mx, my)))
 
     if firstMove is False:
@@ -47,6 +48,7 @@ def on_move(mx, my):
     omy = my
 
     x, y, w = robot.getPos()
+    view.setPos(x,y,w)
 
 def on_click(x, y, button, pressed):
     print('{0} at {1}'.format(
