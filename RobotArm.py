@@ -101,8 +101,8 @@ class RobotArm:
             self.elbow.setAngleRadians(elbow)
             self.shoulder.setAngleRadians(shoulder)
             self.wristBone.setWorldAngleRadians(wristWorldAngleRadians)
-        except:
-            print("Value error")
+        except Exception as e:
+            print("Value error", e)
 
     
     def Shoulder(self, angle):
@@ -165,4 +165,3 @@ class RobotArm:
         time.sleep(1.5)
         self.Rotate(self.ROTATE_NORMAL)
 
-        
