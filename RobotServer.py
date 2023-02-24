@@ -17,7 +17,6 @@ except:
     from FakeKit import FakeKit    
     kit = FakeKit()
     robot = RobotArm(kit)
-    view = RobotArmView(robot)
     HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
 
 
@@ -32,11 +31,6 @@ def parseInput(payload):
     x, y, w = jsonobj["x"], jsonobj["y"], jsonobj["w"]
     return x, y, w
 
-
-if real is False:
-    view.draw()
-    view.show()
-    view.showWindow()
 
 def RobotUpdate(robot):
     while True:
@@ -68,14 +62,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
                     print("parsed", x, y, w, flush=True)
                     robot.setPos(x, y, w)
-                    view.setPos(x,y,w)
-                    if real is False:
-                        view.draw()
-                        view.show()
                     conn.sendall(data)
         except KeyboardInterrupt:
             print("keyboard shit")
-            view.close()
             # quit
             sys.exit()
             doContinue = False
