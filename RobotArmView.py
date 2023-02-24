@@ -10,7 +10,9 @@ class RobotArmView(Frame):
         self.arm = robotArm
         self.height = 512
         self.width = 512
+        self.middlePoint = (self.width/2, self.height/2)
         self.target = (0, 0)
+        self.scale = -5
         self.initUI()
         self.root = root
 
@@ -30,10 +32,12 @@ class RobotArmView(Frame):
         bones = (lap, uap, wp)
 
         self.canvas.delete('all')
-        start_point = (250, 250)
+
+        start_point = self.middlePoint
+        
         for bone in bones:
 
-            bone = bone.mul(-5).add(Vector3(250, 250, 0))
+            bone = bone.mul(self.scale).add(Vector3(self.middlePoint[0], self.middlePoint[1], 0))
             end_point = (int(bone.x), int(bone.y))
             
             thickness = 1
@@ -49,5 +53,22 @@ class RobotArmView(Frame):
 
     def setPos(self, x, y, w):
         self.target = (int(x), int(y))
+
+    def hasNewTargetPosition(self):
+        
+        abs_coord_x = self.root.winfo_pointerx() - self.root.winfo_x()
+        abs_coord_y = self.root.winfo_pointery() - self.root.winfo_y()
+        if abs_coord_x < 0 or abs_coord_y < 0 or abs_coord_x > self.width or abs_coord_y > self.height:
+            return False
+        return True
+    
+    def getTargetPosition(self):
+        abs_coord_x = self.root.winfo_pointerx() - self.root.winfo_x()
+        abs_coord_y = self.root.winfo_pointery() - self.root.winfo_y()
+
+        robotX = (abs_coord_x - self.middlePoint[0])/self.scale
+        robotY = (abs_coord_y - self.middlePoint[1])/self.scale
+        return (robotX,robotY,0)
+
     
 
