@@ -101,7 +101,7 @@ class RobotArm:
             self.elbow.setAngleRadians(elbow)
             self.shoulder.setAngleRadians(shoulder)
             self.wristBone.setWorldAngleRadians(wristWorldAngleRadians)
-            self.rotate.setWorldAngleRadians(rotationRadians)
+            self.rotate.setAngleRadians(rotationRadians)
         except Exception as e:
             print("Value error", e)
 
