@@ -28,8 +28,8 @@ def parseInput(payload):
     print(asStr)
     jsonobj = json.loads(asStr)
 
-    x, y, w = jsonobj["x"], jsonobj["y"], jsonobj["w"]
-    return x, y, w
+    x, y, r, w = jsonobj["x"], jsonobj["y"], jsonobj["r"], jsonobj["w"]
+    return x, y, r, w
 
 
 def RobotUpdate(robot):
@@ -58,10 +58,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     if not data:
                         print("no data baby!");
                         break
-                    x,y,w = parseInput(data)
+                    x,y,r,w = parseInput(data)
 
-                    print("parsed", x, y, w, flush=True)
-                    robot.setPos(x, y, w)
+                    print("parsed", x, y, r, w, flush=True)
+                    robot.setPos(x, y, r, w)
                     conn.sendall(data)
         except KeyboardInterrupt:
             print("keyboard shit")

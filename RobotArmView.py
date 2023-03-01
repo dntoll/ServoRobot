@@ -75,7 +75,7 @@ class RobotArmView(Frame):
 
         robotX = (abs_coord_x - self.leftViewMiddlePoint[0])/self.scale
         robotY = (abs_coord_y - self.leftViewMiddlePoint[1])/self.scale
-        return (robotX,robotY,0)
+        return (robotX,robotY, 1, 0)
 
     
 
