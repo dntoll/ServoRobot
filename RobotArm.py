@@ -70,14 +70,14 @@ class RobotArm:
         self.wrist.update()
         self.grip.update()
     
-    def setPos(self, tipx, tipy, wristWorldAngleRadians):
+    def setPos(self, distanceFromBase, heightOverBase, rotationRadians, wristWorldAngleRadians):
 
         try:
             dy = self.wristBone.length * math.sin(wristWorldAngleRadians)
             dx = self.wristBone.length * math.cos(wristWorldAngleRadians)
 
-            x = tipx-dx
-            y = tipy-dy
+            x = distanceFromBase-dx
+            y = heightOverBase-dy
 
             #print(tipx, tipy, x, y)
             #https://www.researchgate.net/publication/328583527_A_Geometric_Approach_to_Inverse_Kinematics_of_a_3_DOF_Robotic_Arm
@@ -101,6 +101,7 @@ class RobotArm:
             self.elbow.setAngleRadians(elbow)
             self.shoulder.setAngleRadians(shoulder)
             self.wristBone.setWorldAngleRadians(wristWorldAngleRadians)
+            self.rotate.setWorldAngleRadians(rotationRadians)
         except Exception as e:
             print("Value error", e)
 

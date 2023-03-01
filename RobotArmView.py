@@ -13,7 +13,7 @@ class RobotArmView(Frame):
         self.leftViewMiddlePoint = (256, 256)
         self.rightViewMiddlePoint = (768, 256)
         root.geometry(str(self.width) + "x" + str(self.height))
-        self.target = (0, 0)
+
         self.scale = -5
         self.initUI()
         self.root = root
@@ -55,15 +55,11 @@ class RobotArmView(Frame):
             thickness = 1
             self.canvas.create_line(start_point[0], start_point[1], end_point[0], end_point[1])
             start_point = end_point
-        #viewTarget = (self.target[0] * -5 + 250, self.target[1]*-5+250)
-        #self.canvas.create_arc(viewTarget[0], viewTarget[1], viewTarget[0], viewTarget[1])
-        #cv2.circle(self.img, viewTarget, 5, color, thickness)
-
+    
         self.root.update_idletasks()
         self.root.update()
 
-    def setPos(self, x, y, w):
-        self.target = (int(x), int(y))
+    
 
     def hasNewTargetPosition(self):
         
