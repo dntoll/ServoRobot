@@ -20,6 +20,7 @@ class RobotArmView(Frame):
         self.scale = -5
         self.initUI()
         self.root = root
+        self.hasNewState = False
 
 
     def initUI(self):
@@ -41,6 +42,7 @@ class RobotArmView(Frame):
 
             self.lastState.distanceFromBase = robotX
             self.lastState.heightOverBase = robotY
+            self.hasNewState = True
         else:
             #mouse is on the right side
             x = abs_coord_x - self.rightViewMiddlePoint[0]
@@ -51,6 +53,7 @@ class RobotArmView(Frame):
                 rotationAngle += 6.28
 
             self.rotationRadians = rotationAngle
+            self.hasNewState = True
 
     def draw(self):
         lap = self.arm.lowerArmBone.getPos()
@@ -87,7 +90,7 @@ class RobotArmView(Frame):
 
     
 
-    def hasNewTargetPosition(self):
+    def hasNewTargetState(self):
         
         abs_coord_x = self.root.winfo_pointerx() - self.root.winfo_x()
         abs_coord_y = self.root.winfo_pointery() - self.root.winfo_y() - 20
@@ -96,9 +99,9 @@ class RobotArmView(Frame):
         if abs_coord_x < 0 or abs_coord_y < 0 or abs_coord_x > self.width or abs_coord_y > self.height:
             return False
         
-        return True
+        return self.hasNewState
     
-    def getTargetPosition(self):
-        
+    def getTargetState(self):
+        self.hasNewState = False
         return self.lastSetPosition
 

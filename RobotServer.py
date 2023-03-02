@@ -1,5 +1,7 @@
 from RobotArm import RobotArm
 from threading import Thread
+from RobotState import RobotState
+
 import json
 import socket
 import time
@@ -28,8 +30,8 @@ def parseInput(payload):
     print(asStr)
     jsonobj = json.loads(asStr)
 
-    x, y, r, w, g = jsonobj["x"], jsonobj["y"], jsonobj["r"], jsonobj["w"], jsonobj["g"]
-    return x, y, r, w, g
+    state = RobotState.decode(jsonobj)
+    return state
 
 
 def RobotUpdate(robot):
@@ -58,10 +60,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     if not data:
                         print("no data baby!");
                         break
-                    x,y,r,w, g = parseInput(data)
-
-                    print("parsed", x, y, r, w, g, flush=True)
-                    robot.setPos(x, y, r, w, g)
+                    state = parseInput(data)
+                    robot.setState(state)
                     conn.sendall(data)
         except KeyboardInterrupt:
             print("keyboard shit")
