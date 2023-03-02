@@ -34,7 +34,7 @@ def getStringFromState(state):
     payload = state.encode()
     jsonString = json.dumps(payload)
     jsonString += "\n"
-    return jsonString.encode('utf-8'))
+    return jsonString.encode('utf-8')
 
 def RobotUpdate(robot):
     while True:
