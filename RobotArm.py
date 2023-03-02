@@ -1,15 +1,7 @@
-
 from ServoJoint import ServoJoint
-
 from Bone import Bone
-
-
-
 import time 
 import math 
-
-
-
 
 class RobotArm:
     
@@ -35,7 +27,7 @@ class RobotArm:
 
     def __init__(self, kit):
         self.kit = kit
-        self.rotate = ServoJoint(self.kit, 15, 0, 60, 180)
+        self.rotate = ServoJoint(self.kit, 15, self.ROTATE_FULLY_RIGHT, self.ROTATE_NORMAL, self.ROTATE_FULLY_LEFT)
         self.shoulder = ServoJoint(self.kit, 8, 30, 90, 160)
         self.elbow = ServoJoint(self.kit, 5, 10, 90, 180)
         self.wrist = ServoJoint(self.kit, 0, 0, 90, 180)
@@ -70,7 +62,7 @@ class RobotArm:
         self.wrist.update()
         self.grip.update()
     
-    def setPos(self, distanceFromBase, heightOverBase, rotationRadians, wristWorldAngleRadians):
+    def setPos(self, distanceFromBase, heightOverBase, rotationRadians, wristWorldAngleRadians, gripp):
 
         try:
             dy = self.wristBone.length * math.sin(wristWorldAngleRadians)
@@ -102,6 +94,9 @@ class RobotArm:
             self.shoulder.setAngleRadians(shoulder)
             self.wristBone.setWorldAngleRadians(wristWorldAngleRadians)
             self.rotate.setAngleRadians(rotationRadians)
+            self.grip.setAngleRadians(gripp)
+
+
         except Exception as e:
             print("Value error", e)
 

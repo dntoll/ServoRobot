@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from tkinter import Tk, Canvas, Frame, BOTH
 from Vector3 import Vector3
+import math
 
 class RobotArmView(Frame):
 
@@ -9,11 +10,12 @@ class RobotArmView(Frame):
         super().__init__()
         self.arm = robotArm
         self.height = 256
-        self.width = 1024
-        self.leftViewMiddlePoint = (256, 256)
-        self.rightViewMiddlePoint = (768, 256)
+        self.width = 768
+        self.leftViewMiddlePoint = (self.width/4, 256)
+        self.rightViewMiddlePoint = (3*self.width/4, self.height / 2)
         root.geometry(str(self.width) + "x" + str(self.height))
 
+        self.lastSetPosition = (0,0,0,0,robotArm.WRIST_FULLY_UP)
         self.scale = -5
         self.initUI()
         self.root = root
@@ -24,12 +26,36 @@ class RobotArmView(Frame):
         self.pack(fill=BOTH, expand=1)
 
         self.canvas = Canvas(self)
+        self.canvas.bind('<B1-Motion>', self.mouseMoveWithButtonDown)
         self.canvas.pack(fill=BOTH, expand=1)    
+
+    def mouseMoveWithButtonDown(self, event):
+        abs_coord_x = self.root.winfo_pointerx() - self.root.winfo_x()
+        abs_coord_y = self.root.winfo_pointery() - self.root.winfo_y() - 20
+
+
+        if abs_coord_x < self.width/2:
+            robotX = (abs_coord_x - self.leftViewMiddlePoint[0])/self.scale
+            robotY = (abs_coord_y - self.leftViewMiddlePoint[1])/self.scale
+
+            self.lastSetPosition = (robotX,robotY, self.lastSetPosition[2], self.lastSetPosition[3], self.lastSetPosition[4])
+        else:
+            #mouse is on the right side
+            x = abs_coord_x - self.rightViewMiddlePoint[0]
+            y = abs_coord_y - self.rightViewMiddlePoint[1]
+
+            rotationAngle = -math.atan2(y, x)
+            while rotationAngle < 0:
+                rotationAngle += 6.28
+
+            self.lastSetPosition = (self.lastSetPosition[0], self.lastSetPosition[1], rotationAngle, self.lastSetPosition[3], self.lastSetPosition[4])
 
     def draw(self):
         lap = self.arm.lowerArmBone.getPos()
         uap = self.arm.upperArmBone.getPos()
         wp = self.arm.wristBone.getPos()
+
+        
 
         bones = (lap, uap, wp)
 
@@ -48,13 +74,11 @@ class RobotArmView(Frame):
         
         start_point = self.rightViewMiddlePoint
         
-        for bone in bones:
-            bone = bone.mul(self.scale).add(Vector3(self.rightViewMiddlePoint[0], self.rightViewMiddlePoint[1], 0))
-            end_point = (int(bone.x), int(bone.z))
-            
-            thickness = 1
-            self.canvas.create_line(start_point[0], start_point[1], end_point[0], end_point[1])
-            start_point = end_point
+        #Draw a clock like directional 
+        v = -self.arm.rotate.getAngleRadians()
+        len = 120
+        end_point = (self.rightViewMiddlePoint[0] +  math.cos(v) * len, math.sin(v) * len + self.rightViewMiddlePoint[1])
+        self.canvas.create_line(start_point[0], start_point[1], end_point[0], end_point[1])
     
         self.root.update_idletasks()
         self.root.update()
@@ -65,17 +89,14 @@ class RobotArmView(Frame):
         
         abs_coord_x = self.root.winfo_pointerx() - self.root.winfo_x()
         abs_coord_y = self.root.winfo_pointery() - self.root.winfo_y() - 20
+
+
         if abs_coord_x < 0 or abs_coord_y < 0 or abs_coord_x > self.width or abs_coord_y > self.height:
             return False
+        
         return True
     
     def getTargetPosition(self):
-        abs_coord_x = self.root.winfo_pointerx() - self.root.winfo_x()
-        abs_coord_y = self.root.winfo_pointery() - self.root.winfo_y() - 20
-
-        robotX = (abs_coord_x - self.leftViewMiddlePoint[0])/self.scale
-        robotY = (abs_coord_y - self.leftViewMiddlePoint[1])/self.scale
-        return (robotX,robotY, 1, 0)
-
-    
+        
+        return self.lastSetPosition
 

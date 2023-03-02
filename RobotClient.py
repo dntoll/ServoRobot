@@ -25,14 +25,14 @@ omx = 0
 omy = 0
 firstMove = True
 
-def sendPos(s, x, y, r, w):
+def sendPos(s, x, y, r, w, g):
     global robot
-    print(f"sendpos {x} {y} {r} {w}", flush=True)
-    robot.setPos(x, y, r, w)
+    print(f"sendpos {x} {y} {r} {w} {g}", flush=True)
+    robot.setPos(x, y, r, w, g)
     if w < 0:
         w += 6.28
 
-    payload = {"x": x, "y":y, "r": r, "w": w}
+    payload = {"x": x, "y":y, "r": r, "w": w, "g": g}
     jsonString = json.dumps(payload)
     jsonString += "\n"
     s.send(jsonString.encode('utf-8'))
@@ -60,9 +60,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             time.sleep(0.1)
             if view.hasNewTargetPosition():
                 pos = view.getTargetPosition()
-                sendPos(globalS, pos[0], pos[1], pos[2], pos[3])
+                sendPos(globalS, pos[0], pos[1], pos[2], pos[3], pos[4])
             view.draw()
-            
+            robot.update()
             
         except KeyboardInterrupt:
             sys.exit(0)

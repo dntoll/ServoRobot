@@ -20,6 +20,10 @@ class ServoJoint:
         self.setAngleDegrees(angle)
 
     def setAngleDegrees(self, newAngle):
+
+        if newAngle < 0:
+            newAngle = newAngle + 360
+
         if newAngle < self.min:
             print("minValue found", newAngle , self.min)
             newAngle = self.min
