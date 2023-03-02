@@ -46,8 +46,6 @@ class RobotArmView(Frame):
             self.lastState.wristWorldAngleRadians = self.arm.getState().wristWorldAngleRadians -distanceMove
 
 
-        if self.lastState.wristWorldAngleRadians < 0:
-            self.lastState.wristWorldAngleRadians = 0
         self.hasNewState = True
 
         print("arm state", self.arm.getState().wristWorldAngleRadians, flush=True)
