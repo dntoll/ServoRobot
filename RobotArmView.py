@@ -103,5 +103,5 @@ class RobotArmView(Frame):
     
     def getTargetState(self):
         self.hasNewState = False
-        return self.lastSetPosition
+        return self.lastState
 
