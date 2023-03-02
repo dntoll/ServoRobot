@@ -43,12 +43,12 @@ class RobotArm:
     
         
         
-    def setState(self, rotate, shoulder, elbow, wrist, grip):
-        self.Rotate(rotate)
-        self.Shoulder(shoulder)
-        self.Elbow(elbow)
-        self.Wrist(wrist)
-        self.Grip(grip)
+    #def setState(self, rotate, shoulder, elbow, wrist, grip):
+    #    self.Rotate(rotate)
+    #    self.Shoulder(shoulder)
+    #    self.Elbow(elbow)
+    #    self.Wrist(wrist)
+    #    self.Grip(grip)
 
         #print("shoulder straight", self.wristBone)
 
@@ -63,7 +63,7 @@ class RobotArm:
         self.wrist.update()
         self.grip.update()
     
-    def setPos(self, state): 
+    def setState(self, state): 
         
         try:
             dy = self.wristBone.length * math.sin(state.wristWorldAngleRadians)
