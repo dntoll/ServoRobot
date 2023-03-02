@@ -27,12 +27,16 @@ firstMove = True
 
 def sendPos(s, state):
     global robot
-    robot.setState(state)
-    payload = state.encode() 
-    jsonString = json.dumps(payload)
-    jsonString += "\n"
-    s.send(jsonString.encode('utf-8'))
-    data = s.recv(1024)
+    try:
+        robot.setState(state)
+        payload = state.encode() 
+        jsonString = json.dumps(payload)
+        jsonString += "\n"
+        s.send(jsonString.encode('utf-8'))
+        data = s.recv(1024)
+    except Exception as e:
+        print("not possible", e, flush=True)
+    
     #print(f"Received {data!r}", flush=True)
 
 print("Hej")

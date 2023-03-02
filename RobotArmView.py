@@ -10,7 +10,7 @@ class RobotArmView(Frame):
         super().__init__()
         self.arm = robotArm
         self.height = 256
-        self.width = 768
+        self.width = 1024
         self.leftViewMiddlePoint = (self.width/4, 256)
         self.rightViewMiddlePoint = (3*self.width/4, self.height / 2)
         root.geometry(str(self.width) + "x" + str(self.height))
@@ -85,7 +85,7 @@ class RobotArmView(Frame):
         
         #Draw a clock like directional 
         v = -self.arm.rotate.getAngleRadians()
-        len = self.lastState.distanceFromBase * self.scale
+        len = self.arm.getState().distanceFromBase * self.scale
         end_point = (self.rightViewMiddlePoint[0] +  math.cos(v) * len, math.sin(v) * len + self.rightViewMiddlePoint[1])
         self.canvas.create_line(start_point[0], start_point[1], end_point[0], end_point[1])
     

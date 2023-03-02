@@ -86,8 +86,8 @@ class RobotArm:
 
 
             if 1 < temp < -1:
-                print("not possible, value error", temp)
-                return
+                raise Exception("not possible, value error", temp, flush=True)
+                
             elbow = math.pi - math.acos( temp )
             shoulder = math.asin(y/r) + math.atan(d2*math.sin(elbow)/(d1 + d2*math.cos(elbow)))
 
@@ -99,7 +99,7 @@ class RobotArm:
 
 
         except Exception as e:
-            print("Value error", e)
+            raise e
 
     
     def Shoulder(self, angle):

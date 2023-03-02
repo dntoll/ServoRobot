@@ -25,10 +25,10 @@ class ServoJoint:
             newAngle = newAngle + 360
 
         if newAngle < self.min:
-            print("minValue found", newAngle , self.min)
+            print("minValue found", newAngle , self.min, flush=True)
             newAngle = self.min
         if newAngle > self.max:
-            print("maxValue found", newAngle , self.max)
+            print("maxValue found", newAngle , self.max, flush=True)
             newAngle = self.max
         
         
