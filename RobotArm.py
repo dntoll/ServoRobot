@@ -1,4 +1,5 @@
 from ServoJoint import ServoJoint
+from RobotState import RobotState
 from Bone import Bone
 import time 
 import math 
@@ -51,9 +52,9 @@ class RobotArm:
 
         #print("shoulder straight", self.wristBone)
 
-    def getPos(self):
+    def getState(self):
         wp = self.wristBone.getPos()
-        return wp.x, wp.y, self.wristBone.getWorldAngleRadians()
+        return RobotState(wp.x, wp.y, self.rotate.getAngleRadians(), self.wristBone.getWorldAngleRadians())
     
     def update(self):
         self.rotate.update()
@@ -62,14 +63,14 @@ class RobotArm:
         self.wrist.update()
         self.grip.update()
     
-    def setPos(self, distanceFromBase, heightOverBase, rotationRadians, wristWorldAngleRadians, gripp):
-
+    def setPos(self, state): 
+        
         try:
-            dy = self.wristBone.length * math.sin(wristWorldAngleRadians)
-            dx = self.wristBone.length * math.cos(wristWorldAngleRadians)
+            dy = self.wristBone.length * math.sin(state.wristWorldAngleRadians)
+            dx = self.wristBone.length * math.cos(state.wristWorldAngleRadians)
 
-            x = distanceFromBase-dx
-            y = heightOverBase-dy
+            x = state.distanceFromBase-dx
+            y = state.heightOverBase-dy
 
             #print(tipx, tipy, x, y)
             #https://www.researchgate.net/publication/328583527_A_Geometric_Approach_to_Inverse_Kinematics_of_a_3_DOF_Robotic_Arm
@@ -92,9 +93,9 @@ class RobotArm:
 
             self.elbow.setAngleRadians(elbow)
             self.shoulder.setAngleRadians(shoulder)
-            self.wristBone.setWorldAngleRadians(wristWorldAngleRadians)
-            self.rotate.setAngleRadians(rotationRadians)
-            self.grip.setAngleRadians(gripp)
+            self.wristBone.setWorldAngleRadians(state.wristWorldAngleRadians)
+            self.rotate.setAngleRadians(state.rotationRadians)
+            self.grip.setAngleRadians(state.grip)
 
 
         except Exception as e:

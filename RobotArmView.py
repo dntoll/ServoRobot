@@ -15,7 +15,8 @@ class RobotArmView(Frame):
         self.rightViewMiddlePoint = (3*self.width/4, self.height / 2)
         root.geometry(str(self.width) + "x" + str(self.height))
 
-        self.lastSetPosition = (0,0,0,0,robotArm.WRIST_FULLY_UP)
+
+        self.lastState = robotArm.getState()
         self.scale = -5
         self.initUI()
         self.root = root
@@ -38,7 +39,8 @@ class RobotArmView(Frame):
             robotX = (abs_coord_x - self.leftViewMiddlePoint[0])/self.scale
             robotY = (abs_coord_y - self.leftViewMiddlePoint[1])/self.scale
 
-            self.lastSetPosition = (robotX,robotY, self.lastSetPosition[2], self.lastSetPosition[3], self.lastSetPosition[4])
+            self.lastState.distanceFromBase = robotX
+            self.lastState.heightOverBase = robotY
         else:
             #mouse is on the right side
             x = abs_coord_x - self.rightViewMiddlePoint[0]
@@ -48,7 +50,7 @@ class RobotArmView(Frame):
             while rotationAngle < 0:
                 rotationAngle += 6.28
 
-            self.lastSetPosition = (self.lastSetPosition[0], self.lastSetPosition[1], rotationAngle, self.lastSetPosition[3], self.lastSetPosition[4])
+            self.rotationRadians = rotationAngle
 
     def draw(self):
         lap = self.arm.lowerArmBone.getPos()
