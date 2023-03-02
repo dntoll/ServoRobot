@@ -2,6 +2,8 @@ import cv2
 import numpy as np
 from tkinter import Tk, Canvas, Frame, BOTH
 from Vector3 import Vector3
+from RobotArm import RobotArm
+
 import math
 
 class RobotArmView(Frame):
@@ -29,7 +31,21 @@ class RobotArmView(Frame):
 
         self.canvas = Canvas(self)
         self.canvas.bind('<B1-Motion>', self.mouseMoveWithButtonDown)
+        self.canvas.bind('<Button-1>', self.mouseMoveWithButtonDown)
+        self.canvas.bind('<MouseWheel>', self.grip)
         self.canvas.pack(fill=BOTH, expand=1)    
+    
+    def buttonEvent(self, event):
+        print(event, flush=True)
+
+    def grip(self, event):
+        print(event, flush=True)
+        if event.delta > 0 :
+            self.lastState.grip = RobotArm.GRIP_OPEN
+        if event.delta < 0 :
+            self.lastState.grip = RobotArm.GRIP_CLOSED
+        self.hasNewState = True
+        
 
     def mouseMoveWithButtonDown(self, event):
         abs_coord_x = self.root.winfo_pointerx() - self.root.winfo_x() -10

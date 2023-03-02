@@ -95,7 +95,7 @@ class RobotArm:
             self.shoulder.setAngleRadians(shoulder)
             self.wristBone.setWorldAngleRadians(state.wristWorldAngleRadians)
             self.rotate.setAngleRadians(state.rotationRadians)
-            self.grip.setAngleRadians(state.grip)
+            self.grip.setAngleDegrees(state.grip)
 
 
         except Exception as e:
