@@ -3,7 +3,7 @@ class RobotState:
     distanceFromBase = 25
     heightOverBase = 20
     rotationRadians  = 0
-    wristWorldAngleRadians = 0
+    wristWorldAngleRadians = 3.14
     grip =0
 
 
@@ -21,3 +21,5 @@ class RobotState:
     def decode(obj):
         return RobotState(obj["x"], obj["y"], obj["r"], obj["w"], obj["g"])
 
+    def __str__(self):
+        return "State <" +  str(self.wristWorldAngleRadians) + ">"

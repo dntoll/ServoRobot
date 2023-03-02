@@ -66,6 +66,7 @@ class RobotArm:
     def setState(self, state): 
         
         try:
+            
             dy = self.wristBone.length * math.sin(state.wristWorldAngleRadians)
             dx = self.wristBone.length * math.cos(state.wristWorldAngleRadians)
 
@@ -91,11 +92,14 @@ class RobotArm:
             elbow = math.pi - math.acos( temp )
             shoulder = math.asin(y/r) + math.atan(d2*math.sin(elbow)/(d1 + d2*math.cos(elbow)))
 
+            
             self.elbow.setAngleRadians(elbow)
             self.shoulder.setAngleRadians(shoulder)
-            self.wristBone.setWorldAngleRadians(state.wristWorldAngleRadians)
-            self.rotate.setAngleRadians(state.rotationRadians)
             self.grip.setAngleDegrees(state.grip)
+            self.rotate.setAngleRadians(state.rotationRadians)
+            self.wristBone.setWorldAngleRadians(state.wristWorldAngleRadians)
+            
+            
 
 
         except Exception as e:

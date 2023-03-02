@@ -23,6 +23,7 @@ class RobotArmView(Frame):
         self.initUI()
         self.root = root
         self.hasNewState = False
+        self.gripIsOpen = False
 
 
     def initUI(self):
@@ -32,19 +33,33 @@ class RobotArmView(Frame):
         self.canvas = Canvas(self)
         self.canvas.bind('<B1-Motion>', self.mouseMoveWithButtonDown)
         self.canvas.bind('<Button-1>', self.mouseMoveWithButtonDown)
-        self.canvas.bind('<MouseWheel>', self.grip)
+        self.canvas.bind('<MouseWheel>', self.wrist)
+        self.canvas.bind('<Button-3>', self.grip)
         self.canvas.pack(fill=BOTH, expand=1)    
     
-    def buttonEvent(self, event):
-        print(event, flush=True)
+    def wrist(self, event):
+        
+        distanceMove = 0.17
+        if event.delta > 0:
+            self.lastState.wristWorldAngleRadians = self.arm.getState().wristWorldAngleRadians +distanceMove
+        else:
+            self.lastState.wristWorldAngleRadians = self.arm.getState().wristWorldAngleRadians -distanceMove
+
+
+        if self.lastState.wristWorldAngleRadians < 0:
+            self.lastState.wristWorldAngleRadians = 0
+        self.hasNewState = True
+
+        print("arm state", self.arm.getState().wristWorldAngleRadians, flush=True)
+        print("target state", self.lastState.wristWorldAngleRadians, flush=True)
 
     def grip(self, event):
-        print(event, flush=True)
-        if event.delta > 0 :
+        if self.gripIsOpen:
             self.lastState.grip = RobotArm.GRIP_OPEN
-        if event.delta < 0 :
+        else:
             self.lastState.grip = RobotArm.GRIP_CLOSED
         self.hasNewState = True
+        self.gripIsOpen = not self.gripIsOpen
         
 
     def mouseMoveWithButtonDown(self, event):
