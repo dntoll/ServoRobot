@@ -28,9 +28,6 @@ firstMove = True
 def sendPos(s, state):
     global robot
     robot.setState(state)
-    if w < 0:
-        w += 6.28
-
     payload = state.encode() 
     jsonString = json.dumps(payload)
     jsonString += "\n"

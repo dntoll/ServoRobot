@@ -52,10 +52,8 @@ class ServoJoint:
         maxChangeAngle = 4
         if self.targetAngle > self.lastKnownAngle + maxChangeAngle:
             self.lastKnownAngle += maxChangeAngle
-            print("increased angle")
         elif self.targetAngle < self.lastKnownAngle - maxChangeAngle :
             self.lastKnownAngle -= maxChangeAngle
-            print("reduced angle")
         else:
             self.lastKnownAngle = self.targetAngle
             

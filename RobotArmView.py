@@ -48,12 +48,16 @@ class RobotArmView(Frame):
             x = abs_coord_x - self.rightViewMiddlePoint[0]
             y = abs_coord_y - self.rightViewMiddlePoint[1]
 
-            rotationAngle = -math.atan2(y, x)
+            distance = - math.sqrt(x*x + y*y) / self.scale
+
+            rotationAngle = math.atan2(y, -x)
             while rotationAngle < 0:
                 rotationAngle += 6.28
 
-            self.rotationRadians = rotationAngle
+            self.lastState.rotationRadians = rotationAngle
+            self.lastState.distanceFromBase = distance
             self.hasNewState = True
+
 
     def draw(self):
         lap = self.arm.lowerArmBone.getPos()
@@ -81,7 +85,7 @@ class RobotArmView(Frame):
         
         #Draw a clock like directional 
         v = -self.arm.rotate.getAngleRadians()
-        len = 120
+        len = self.lastState.distanceFromBase * self.scale
         end_point = (self.rightViewMiddlePoint[0] +  math.cos(v) * len, math.sin(v) * len + self.rightViewMiddlePoint[1])
         self.canvas.create_line(start_point[0], start_point[1], end_point[0], end_point[1])
     
