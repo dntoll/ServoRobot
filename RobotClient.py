@@ -34,6 +34,7 @@ def sendPos(s, state):
         jsonString += "\n"
         s.send(jsonString.encode('utf-8'))
         data = s.recv(1024)
+        print(data)
     except Exception as e:
         print("not possible", e, flush=True)
     

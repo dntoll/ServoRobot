@@ -33,6 +33,10 @@ def parseInput(payload):
     state = RobotState.decode(jsonobj)
     return state
 
+def sendPos(payload):
+    jsonString = json.dumps(payload)
+    jsonString += "\n"
+    return jsonString.encode('utf-8'))
 
 def RobotUpdate(robot):
     while True:
@@ -62,7 +66,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                         break
                     state = parseInput(data)
                     robot.setState(state)
-                    conn.sendall(data)
+                    conn.sendall(sendPos(robot.getState().encode()))
         except KeyboardInterrupt:
             print("keyboard shit")
             # quit
