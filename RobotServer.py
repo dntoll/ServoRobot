@@ -1,8 +1,8 @@
 from RobotArm import RobotArm
 from threading import Thread
-from RobotState import RobotState
+from protocol import *
 
-import json
+
 import socket
 import time
 import sys
@@ -25,16 +25,7 @@ except:
 keyPressStart = time.time()
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 
-def getStateFromString(payload):
-    asStr = payload.decode("utf-8")
-    jsonobj = json.loads(asStr)
-    return RobotState.decode(jsonobj)
 
-def getStringFromState(state):
-    payload = state.encode()
-    jsonString = json.dumps(payload)
-    jsonString += "\n"
-    return jsonString.encode('utf-8')
 
 def RobotUpdate(robot):
     while True:

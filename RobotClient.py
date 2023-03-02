@@ -4,10 +4,13 @@ from pynput import keyboard
 from pynput.keyboard import Key
 from pynput import mouse
 from RobotArmView import RobotArmView
+from RobotState import RobotState
 import time
 import socket
 import json
 import sys
+
+from protocol import *
 
 fake = FakeKit()
 robot = RobotArm(fake)
@@ -25,16 +28,17 @@ omx = 0
 omy = 0
 firstMove = True
 
+
+
 def sendPos(s, state):
     global robot
     try:
         robot.setState(state)
-        payload = state.encode() 
-        jsonString = json.dumps(payload)
-        jsonString += "\n"
-        s.send(jsonString.encode('utf-8'))
+        str = getStringFromState(state)
+        s.send(str)
         data = s.recv(1024)
-        print(data)
+        print(getStateFromString(data))
+        robot.setState(state)
     except Exception as e:
         print("not possible", e, flush=True)
     

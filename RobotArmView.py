@@ -32,8 +32,8 @@ class RobotArmView(Frame):
         self.canvas.pack(fill=BOTH, expand=1)    
 
     def mouseMoveWithButtonDown(self, event):
-        abs_coord_x = self.root.winfo_pointerx() - self.root.winfo_x()
-        abs_coord_y = self.root.winfo_pointery() - self.root.winfo_y() - 20
+        abs_coord_x = self.root.winfo_pointerx() - self.root.winfo_x() -10
+        abs_coord_y = self.root.winfo_pointery() - self.root.winfo_y() - 30
 
 
         if abs_coord_x < self.width/2:
@@ -97,7 +97,7 @@ class RobotArmView(Frame):
     def hasNewTargetState(self):
         
         abs_coord_x = self.root.winfo_pointerx() - self.root.winfo_x()
-        abs_coord_y = self.root.winfo_pointery() - self.root.winfo_y() - 20
+        abs_coord_y = self.root.winfo_pointery() - self.root.winfo_y() - 30
 
 
         if abs_coord_x < 0 or abs_coord_y < 0 or abs_coord_x > self.width or abs_coord_y > self.height:
