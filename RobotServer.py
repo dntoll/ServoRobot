@@ -25,15 +25,13 @@ except:
 keyPressStart = time.time()
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 
-def parseInput(payload):
+def getStateFromString(payload):
     asStr = payload.decode("utf-8")
-    print(asStr)
     jsonobj = json.loads(asStr)
+    return RobotState.decode(jsonobj)
 
-    state = RobotState.decode(jsonobj)
-    return state
-
-def sendPos(payload):
+def getStringFromState(state):
+    payload = state.encode()
     jsonString = json.dumps(payload)
     jsonString += "\n"
     return jsonString.encode('utf-8'))
@@ -64,9 +62,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     if not data:
                         print("no data baby!");
                         break
-                    state = parseInput(data)
+                    state = getStateFromString(data)
                     robot.setState(state)
-                    conn.sendall(sendPos(robot.getState().encode()))
+                    conn.sendall(getStringFromState(robot.getState()))
         except KeyboardInterrupt:
             print("keyboard shit")
             # quit
