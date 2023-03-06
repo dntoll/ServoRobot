@@ -1,35 +1,44 @@
 import cv2
 import numpy as np
-from tkinter import Tk, Canvas, Frame, BOTH
+from tkinter import Tk, Canvas, Frame, BOTH, ttk
 from Vector3 import Vector3
 from RobotArm import RobotArm
+from Lib import copy
 
 import math
 
 class RobotArmView(Frame):
 
-    def __init__(self, robotArm, root):
+    def __init__(self, robotArm, root, recording):
         super().__init__()
         self.arm = robotArm
         self.height = 384
         self.width = 1024
         self.leftViewMiddlePoint = (self.width/4, 2* self.height /3)
         self.rightViewMiddlePoint = (3*self.width/4, self.height / 2)
-        root.geometry(str(self.width) + "x" + str(self.height))
+        self.recording = recording
         self.debug = "hej"
 
         self.lastState = robotArm.getState()
         self.scale = -5
-        self.initUI()
         self.root = root
+        self.initUI()
+        
         self.hasNewState = False
         self.gripIsOpen = False
         self.wristIsControlled = False
+        self.wantsReplay = False
 
 
     def initUI(self):
+        
+        self.root.geometry(str(self.width) + "x" + str(self.height))
+
         self.master.title("Robot")
         self.pack(fill=BOTH, expand=1)
+
+
+        ttk.Button(self, text="Quit", command=self.root.destroy)
 
         self.canvas = Canvas(self)
         self.canvas.bind('<B1-Motion>', self.mouseMoveWithButtonDown)
@@ -37,10 +46,20 @@ class RobotArmView(Frame):
         self.canvas.bind('<MouseWheel>', self.wrist)
         self.canvas.bind('<Button-2>', self.stopWristFromControl)
         self.canvas.bind('<Button-3>', self.grip)
+        #self.bind('<KeyPress>', self.key_released )
+        self.bind('<KeyRelease>', self.key_released )
         self.canvas.pack(fill=BOTH, expand=1)    
+        self.focus_set()
     
     def stopWristFromControl(self, event):
         self.wristIsControlled = False
+    
+    def key_released(self, event):
+        if event.char == 's':
+            self.recording.append(copy.copy(self.lastState) )
+        elif event.char == 'r':
+            self.wantsReplay = True
+
 
     def wrist(self, event):
         
@@ -138,19 +157,27 @@ class RobotArmView(Frame):
         
 
         v = -60/360/(2.0*math.pi)
-        len = 30 * self.scale
-        end_point = (self.rightViewMiddlePoint[0] +  math.cos(v) * len, math.sin(v) * len + self.rightViewMiddlePoint[1])
+        length = 30 * self.scale
+        end_point = (self.rightViewMiddlePoint[0] +  math.cos(v) * length, math.sin(v) * length + self.rightViewMiddlePoint[1])
         self.canvas.create_line(start_point[0], start_point[1], end_point[0], end_point[1])
 
         #Draw a clock like directional 
         v = -self.arm.rotate.getAngleRadians()
-        len = self.arm.getState().distanceFromBase * self.scale
-        end_point = (self.rightViewMiddlePoint[0] +  math.cos(v) * len, math.sin(v) * len + self.rightViewMiddlePoint[1])
+        length = self.arm.getState().distanceFromBase * self.scale
+        end_point = (self.rightViewMiddlePoint[0] +  math.cos(v) * length, math.sin(v) * length + self.rightViewMiddlePoint[1])
         self.canvas.create_line(start_point[0], start_point[1], end_point[0], end_point[1])
         pos = str(self.arm.rotate.getAngleRadians())
         self.canvas.create_text(start_point[0], start_point[1]-30, text=pos, fill="black", font=('Helvetica 9'))
 
+
         self.canvas.create_text(20, 20, text=self.debug, fill="red", font=('Helvetica 9 bold'))
+
+
+        i = 0
+        for x in self.recording:
+            recording = str(x)
+            i += 1
+            self.canvas.create_text(120, 30+i*10, text=recording, fill="red", font=('Helvetica 9 bold'))
              
     
         self.root.update_idletasks()
@@ -168,6 +195,9 @@ class RobotArmView(Frame):
             return False
         
         return self.hasNewState
+    
+    def userWantsReplay(self):
+        return self.wantsReplay
     
     def getTargetState(self):
         self.hasNewState = False

@@ -57,11 +57,19 @@ class RobotArm:
         return RobotState(wp.x, wp.y, self.rotate.getAngleRadians(), self.wristBone.getWorldAngleRadians(), self.grip.getAngleRadians())
     
     def update(self):
-        self.rotate.update()
-        self.shoulder.update()
-        self.elbow.update()
-        self.wrist.update()
-        self.grip.update()
+        isDone = True
+
+        if self.rotate.update() == False:
+            isDone = False
+        if self.shoulder.update() == False:
+            isDone = False
+        if self.elbow.update() == False:
+            isDone = False
+        if self.wrist.update() == False:
+            isDone = False
+        if self.grip.update() == False:
+            isDone = False
+        return isDone
     
     def setState(self, state): 
         

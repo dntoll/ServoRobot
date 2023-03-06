@@ -22,4 +22,4 @@ class RobotState:
         return RobotState(obj["x"], obj["y"], obj["r"], obj["w"], obj["g"])
 
     def __str__(self):
-        return "State <" +  str(self.wristWorldAngleRadians) + ">"
+        return "State <" +  str(self.distanceFromBase) + ", "+  str(self.heightOverBase) + ">"

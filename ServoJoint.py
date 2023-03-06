@@ -51,6 +51,8 @@ class ServoJoint:
         self.howDoesItRotateAround = howRotate
 
     def update(self):
+
+        isDone = False
         maxChangeAngle = 10
         if self.targetAngle > self.lastKnownAngle + maxChangeAngle:
             self.lastKnownAngle += maxChangeAngle
@@ -58,6 +60,8 @@ class ServoJoint:
             self.lastKnownAngle -= maxChangeAngle
         else:
             self.lastKnownAngle = self.targetAngle
+            isDone = True
             
         self.kit.servo[self.index].angle = self.lastKnownAngle
+        return isDone
 

@@ -49,6 +49,7 @@ print("Hej")
 
 from tkinter import Tk
 
+recording = []
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     print("try to join")
@@ -56,7 +57,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect((HOST, PORT))
 
     root = Tk()
-    view = RobotArmView(robot, root)
+    view = RobotArmView(robot, root, recording)
 
     print("connected")
     globalS = s
@@ -66,6 +67,16 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             if view.hasNewTargetState():
                 state = view.getTargetState()
                 sendPos(globalS, state)
+            
+            if view.userWantsReplay():
+                print("Replay", flush=True)
+                view.wantsReplay = False
+                for state in recording:
+                    sendPos(globalS, state)
+                    time.sleep(2.1)
+                    while robot.update() is False:
+                        print("wait", flush=True)
+                print("Done", flush=True)
             view.draw()
             robot.update()
             
