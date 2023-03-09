@@ -22,4 +22,7 @@ class RobotState:
         return RobotState(obj["x"], obj["y"], obj["r"], obj["w"], obj["g"])
 
     def __str__(self):
-        return "State <" +  str(self.distanceFromBase) + ", "+  str(self.heightOverBase) + ">"
+        return "State <X=" +  nts(self.distanceFromBase) + ", Y="+  nts(self.heightOverBase) + ", R="+  nts(self.rotationRadians) +", W="+  nts(self.wristWorldAngleRadians)+ ">"
+    
+def nts(number):
+    return str(int(10*number)/10.0)

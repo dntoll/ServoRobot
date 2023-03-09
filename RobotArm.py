@@ -9,7 +9,7 @@ class RobotArm:
 
     ROTATE_FULLY_LEFT = 180
     ROTATE_FULLY_RIGHT = 0
-    ROTATE_NORMAL = 60
+    ROTATE_NORMAL = 90
 
     GRIP_CLOSED = 180
     GRIP_OPEN = 60
