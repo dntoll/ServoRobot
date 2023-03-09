@@ -5,11 +5,13 @@ from pynput.keyboard import Key
 from pynput import mouse
 from RobotArmView import RobotArmView
 from RobotState import RobotState
+
+import pickle
 import time
 import socket
 import json
 import sys
-
+from Lib import copy
 from protocol import *
 
 fake = FakeKit()
@@ -49,7 +51,15 @@ print("Hej")
 
 from tkinter import Tk
 
+file_name = 'recording.pkl'
 recording = []
+
+try:
+    with open(file_name, 'rb') as file:
+        print("load")
+        recording = pickle.load(file)
+except Exception as e:
+    print("File Load error", e, flush=True)
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     print("try to join")
@@ -64,6 +74,23 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     while True:
         try:
             time.sleep(0.1)
+
+
+            if view.wantsToRemove:
+                if view.wantsToAppend is False:
+                    del recording[view.editIndex]
+                    view.wantsToAppend = True
+                    view.wantsToRemove = False
+
+            if view.userWantsToSave():
+                if view.wantsToAppend:
+                    recording.append(copy.copy(view.lastState) )
+                else:
+                    recording[view.editIndex] = copy.copy(view.lastState)
+                
+                with open(file_name, 'wb') as file:
+                    pickle.dump(recording, file)
+
             if view.hasNewTargetState():
                 state = view.getTargetState()
                 sendPos(globalS, state)

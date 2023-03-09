@@ -28,7 +28,10 @@ class RobotArmView(Frame):
         self.gripIsOpen = False
         self.wristIsControlled = False
         self.wantsReplay = False
-
+        self.wantsToSave = False
+        self.wantsToAppend = True
+        self.wantsToRemove = False
+        self.editIndex = -1
 
     def initUI(self):
         
@@ -56,9 +59,37 @@ class RobotArmView(Frame):
     
     def key_released(self, event):
         if event.char == 's':
-            self.recording.append(copy.copy(self.lastState) )
+            self.wantsToSave = True
         elif event.char == 'r':
             self.wantsReplay = True
+        elif event.char == 'd':
+            if self.wantsToAppend is False:
+                self.wantsToRemove = True
+        elif event.char == '+':
+            self.wantsToAppend = False
+            self.editIndex += 1
+            if self.editIndex < 0 or self.editIndex >= len(self.recording):
+                self.editIndex = -1
+                self.wantsToAppend = True
+            else:
+                self.lastState = copy.copy(self.recording[self.editIndex])
+                self.hasNewState = True
+        elif event.char == '-':
+            self.editIndex -= 1
+            self.wantsToAppend = False
+
+            #we start at the end
+            if self.editIndex == -2:
+                self.editIndex = len(self.recording)-1
+
+            #check
+            if self.editIndex < 0:
+                self.editIndex = -1
+                self.wantsToAppend = True
+            else:
+                self.lastState = copy.copy(self.recording[self.editIndex])
+                self.hasNewState = True
+                
 
 
     def wrist(self, event):
@@ -176,8 +207,11 @@ class RobotArmView(Frame):
         i = 0
         for x in self.recording:
             recording = str(x)
-            i += 1
+            
             self.canvas.create_text(120, 30+i*10, text=recording, fill="red", font=('Helvetica 9 bold'))
+            if self.wantsToAppend is False and self.editIndex == i:
+                self.canvas.create_text(20, 30+i*10, text="*", fill="red", font=('Helvetica 9 bold'))
+            i += 1
              
     
         self.root.update_idletasks()
@@ -198,6 +232,12 @@ class RobotArmView(Frame):
     
     def userWantsReplay(self):
         return self.wantsReplay
+    
+    def userWantsToSave(self):
+        if self.wantsToSave:
+            self.wantsToSave = False
+            return True
+        return False
     
     def getTargetState(self):
         self.hasNewState = False
