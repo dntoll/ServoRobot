@@ -30,7 +30,7 @@ class RobotArm:
         self.kit = kit
         self.rotate = ServoJoint(self.kit, 15, self.ROTATE_FULLY_RIGHT, self.ROTATE_NORMAL, self.ROTATE_FULLY_LEFT)
         self.shoulder = ServoJoint(self.kit, 8, 30, 90, 160)
-        self.elbow = ServoJoint(self.kit, 5, 10, 90, 180)
+        self.elbow = ServoJoint(self.kit, 5, 6, 90, 180)
         self.wrist = ServoJoint(self.kit, 0, 0, 90, 180)
         self.grip = ServoJoint(self.kit, 12, 60, 120, 180)
 
