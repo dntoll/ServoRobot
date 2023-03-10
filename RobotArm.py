@@ -18,9 +18,9 @@ class RobotArm:
     ELBOW_FULLY_OPEN = 10
     ELBOW_FULLY_CLOSED = 180
 
-    SHOULDER_FORWARD = 60
+    SHOULDER_FORWARD = 30
     SHOULDER_UP = 90
-    SHOULDER_BACKWARD = 145
+    SHOULDER_BACKWARD = 180
 
     WRIST_FULLY_DOWN = 0
     WRIST_NEUTRAL = 90
@@ -29,10 +29,10 @@ class RobotArm:
     def __init__(self, kit):
         self.kit = kit
         self.rotate = ServoJoint(self.kit, 15, self.ROTATE_FULLY_RIGHT, self.ROTATE_NORMAL, self.ROTATE_FULLY_LEFT)
-        self.shoulder = ServoJoint(self.kit, 8, 30, 90, 160)
-        self.elbow = ServoJoint(self.kit, 5, 6, 90, 180)
-        self.wrist = ServoJoint(self.kit, 0, 0, 90, 180)
-        self.grip = ServoJoint(self.kit, 12, 60, 120, 180)
+        self.shoulder = ServoJoint(self.kit, 8, self.SHOULDER_FORWARD, self.SHOULDER_UP, self.SHOULDER_BACKWARD)
+        self.elbow = ServoJoint(self.kit, 5, self.ELBOW_FULLY_OPEN, self.ELBOW_90_DEG, self.ELBOW_FULLY_CLOSED)
+        self.wrist = ServoJoint(self.kit, 0, self.WRIST_FULLY_DOWN, self.WRIST_NEUTRAL, self.WRIST_FULLY_UP)
+        self.grip = ServoJoint(self.kit, 12, self.GRIP_OPEN, 120, self.GRIP_CLOSED)
 
         self.lowerArmBone = Bone(self.shoulder, 20, 1.0, 0)
         self.upperArmBone = Bone(self.elbow, 20, -1.0, 0)
@@ -113,6 +113,12 @@ class RobotArm:
         except Exception as e:
             raise e
 
+    def Relax(self):
+        self.Shoulder(self.SHOULDER_UP)
+        self.Grip(self.GRIP_OPEN)
+        self.Wrist(self.WRIST_NEUTRAL)
+        self.Elbow(self.ELBOW_90_DEG)
+        self.Rotate(self.ROTATE_NORMAL)
     
     def Shoulder(self, angle):
         self.shoulder.setAngleDegrees(angle)

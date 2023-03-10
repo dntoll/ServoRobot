@@ -16,6 +16,7 @@ from protocol import *
 
 fake = FakeKit()
 robot = RobotArm(fake)
+robot.Relax()
 
 
 x = 20
@@ -100,7 +101,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 view.wantsReplay = False
                 for state in recording:
                     sendPos(globalS, state)
-                    time.sleep(2.1)
+                    time.sleep(1.1)
                     while robot.update() is False:
                         print("wait", flush=True)
                 print("Done", flush=True)

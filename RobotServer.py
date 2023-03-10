@@ -11,6 +11,7 @@ try:
     real = True
     from adafruit_servokit import ServoKit
     kit = ServoKit(channels=16)
+    
     robot = RobotArm(kit)
     HOST = "0.0.0.0"  
 except:

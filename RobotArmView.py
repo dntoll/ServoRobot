@@ -62,6 +62,10 @@ class RobotArmView(Frame):
             self.wantsToSave = True
         elif event.char == 'r':
             self.wantsReplay = True
+        elif event.char == 'n':
+            self.arm.Relax()
+            self.lastState = self.arm.getState()
+            self.hasNewState = True
         elif event.char == 'd':
             if self.wantsToAppend is False:
                 self.wantsToRemove = True
