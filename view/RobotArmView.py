@@ -16,10 +16,13 @@ class RobotArmView(Frame):
         self.width = 1024
         self.leftViewMiddlePoint = (self.width/4, 2* self.height /3)
         self.rightViewMiddlePoint = (3*self.width/4, self.height / 2)
-        self.recording = recording
         self.debug = "hej"
-
+        
+        self.recording = recording
         self.lastState = robotArm.getState()
+        self.editIndex = -1
+        self.wantsToAppend = True
+
         self.scale = -5
         self.root = root
         self.initUI()
@@ -29,9 +32,8 @@ class RobotArmView(Frame):
         self.wristIsControlled = False
         self.wantsReplay = False
         self.wantsToSave = False
-        self.wantsToAppend = True
         self.wantsToRemove = False
-        self.editIndex = -1
+        
 
     def initUI(self):
         

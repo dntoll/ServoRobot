@@ -5,7 +5,7 @@ from pynput.keyboard import Key
 from pynput import mouse
 from view.RobotArmView import RobotArmView
 from model.RobotState import RobotState
-
+from model.Recording import Recording
 import pickle
 import time
 import socket
@@ -54,7 +54,7 @@ print("Hej")
 from tkinter import Tk
 
 file_name = 'recordings/rubber.pkl'
-recording = []
+recording = Recording(robot.getState())
 
 try:
     with open(file_name, 'rb') as file:
