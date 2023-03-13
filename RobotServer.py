@@ -33,6 +33,7 @@ def RobotUpdate(robot, doContinue):
     while doContinue:
         robot.update()
         time.sleep(0.1)
+    print("ended update thread")
 
 
 protocol = Protocol()
