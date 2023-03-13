@@ -27,17 +27,18 @@ keyPressStart = time.time()
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 
 
+doContinue = True
 
-def RobotUpdate(robot):
-    while True:
+def RobotUpdate(robot, doContinue):
+    while doContinue:
         robot.update()
         time.sleep(0.1)
 
 
 protocol = Protocol()
 
-t = Thread(target=RobotUpdate, args=[robot])
-t.start()
+updateThread = Thread(target=RobotUpdate, args=[robot, doContinue])
+updateThread.start()
 
 print("Waiting for client:", flush=True)
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -58,9 +59,14 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     robot.setState(state)
                     conn.sendall(protocol.getStringFromState(robot.getState()))
         except KeyboardInterrupt:
-            print("keyboard shit")
+            print("Keyboard interrupt catched")
+            doContinue = False
+            updateThread.join()
+            print("Thread joined")
             # quit
             sys.exit()
+            
+            
             doContinue = False
         except Exception as e:
             
