@@ -1,10 +1,10 @@
-from RobotArm import RobotArm
-from FakeKit import FakeKit    
+from model.RobotArm import RobotArm
+from model.FakeKit import FakeKit    
 from pynput import keyboard
 from pynput.keyboard import Key
 from pynput import mouse
-from RobotArmView import RobotArmView
-from RobotState import RobotState
+from view.RobotArmView import RobotArmView
+from model.RobotState import RobotState
 
 import pickle
 import time
@@ -12,11 +12,12 @@ import socket
 import json
 import sys
 from Lib import copy
-from protocol import *
+from Protocol import *
 
 fake = FakeKit()
 robot = RobotArm(fake)
 robot.Relax()
+protocol = Protocol()
 
 
 x = 20
@@ -37,10 +38,10 @@ def sendPos(s, state):
     global robot
     try:
         robot.setState(state)
-        str = getStringFromState(state)
+        str = protocol.getStringFromState(state)
         s.send(str)
         data = s.recv(1024)
-        print(getStateFromString(data))
+        print(protocol.getStateFromString(data))
         robot.setState(state)
     except Exception as e:
         print("not possible", e, flush=True)

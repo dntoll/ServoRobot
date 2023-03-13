@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
 from tkinter import Tk, Canvas, Frame, BOTH, ttk
-from Vector3 import Vector3
-from RobotArm import RobotArm
+from model.Vector3 import Vector3
+from model.RobotArm import RobotArm
 from Lib import copy
 
 import math

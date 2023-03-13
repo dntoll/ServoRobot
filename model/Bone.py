@@ -1,4 +1,4 @@
-from Vector3 import Vector3
+from model.Vector3 import Vector3
 import math
 
 class Bone:        

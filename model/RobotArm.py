@@ -1,12 +1,10 @@
-from ServoJoint import ServoJoint
-from RobotState import RobotState
-from Bone import Bone
+from  model.ServoJoint import ServoJoint
+from model.RobotState import RobotState
+from model.Bone import Bone
 import time 
 import math 
 
 class RobotArm:
-    
-
     ROTATE_FULLY_LEFT = 180
     ROTATE_FULLY_RIGHT = 0
     ROTATE_NORMAL = 90

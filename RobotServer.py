@@ -1,6 +1,6 @@
-from RobotArm import RobotArm
+from model.RobotArm import RobotArm
 from threading import Thread
-from protocol import *
+from Protocol import *
 
 
 import socket
@@ -15,7 +15,7 @@ try:
     robot = RobotArm(kit)
     HOST = "0.0.0.0"  
 except:
-    from RobotArmView import RobotArmView
+    from view.RobotArmView import RobotArmView
     real = False
     from FakeKit import FakeKit    
     kit = FakeKit()
@@ -34,7 +34,7 @@ def RobotUpdate(robot):
         time.sleep(0.1)
 
 
-
+protocol = Protocol()
 
 t = Thread(target=RobotUpdate, args=[robot])
 t.start()
@@ -54,9 +54,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     if not data:
                         print("no data baby!");
                         break
-                    state = getStateFromString(data)
+                    state = protocol.getStateFromString(data)
                     robot.setState(state)
-                    conn.sendall(getStringFromState(robot.getState()))
+                    conn.sendall(protocol.getStringFromState(robot.getState()))
         except KeyboardInterrupt:
             print("keyboard shit")
             # quit
