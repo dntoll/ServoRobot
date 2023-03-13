@@ -40,11 +40,12 @@ def ServerUpdate(conn, robot):
     protocol = Protocol()
     data = conn.recv(1024)
     if not data:
-        print("no data baby!");
-        return
+        conn.close()
+        return False
     state = protocol.getStateFromString(data)
     robot.setState(state)
     conn.sendall(protocol.getStringFromState(robot.getState()))
+    return True
 
 cho = "cho"
 updateThread = Thread(target=RobotUpdate, args=(robot, cho))
@@ -59,8 +60,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             conn, addr = s.accept()
             with conn:
                 print(f"Connected by {addr}", flush=True)
-                while doContinue:
-                    ServerUpdate(conn, robot)
+                doContinueServer = True
+                while True
+                    doContinueServer = ServerUpdate(conn, robot)
+                    if doContinueServer is False:
+                        break
+                print("Disconnected", flush=True)
     except KeyboardInterrupt:
         doContinue = False
         s.close()
