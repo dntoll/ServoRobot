@@ -29,7 +29,7 @@ PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 
 doContinue = True
 
-def RobotUpdate(robot):
+def RobotUpdate(robot, cho):
     global doContinue
     while doContinue:
         robot.update()
@@ -47,8 +47,8 @@ def ServerUpdate(conn, robot):
     robot.setState(state)
     conn.sendall(protocol.getStringFromState(robot.getState()))
 
-
-updateThread = Thread(target=RobotUpdate, args=(robot))
+cho = "cho"
+updateThread = Thread(target=RobotUpdate, args=(robot, cho))
 updateThread.start()
 
 print("Waiting for client:", flush=True)
