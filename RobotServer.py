@@ -33,7 +33,7 @@ def RobotUpdate(robot, doContinue):
     while doContinue:
         robot.update()
         time.sleep(0.1)
-    print("ended update thread")
+    print("ended update thread", flush=True)
 
 
 protocol = Protocol()
@@ -45,7 +45,6 @@ print("Waiting for client:", flush=True)
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.bind((HOST, PORT))
     s.listen()
-    doContinue = True
     while doContinue:
         try:
             conn, addr = s.accept()
@@ -60,11 +59,13 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     robot.setState(state)
                     conn.sendall(protocol.getStringFromState(robot.getState()))
         except KeyboardInterrupt:
-            print("Keyboard interrupt catched")
+            print("Keyboard interrupt catched", flush=True)
             doContinue = False
+            print("Try to join", flush=True)
             updateThread.join()
-            print("Thread joined")
+            print("Thread joined", flush=True)
             # quit
+            s.close()
             sys.exit()
             
             
