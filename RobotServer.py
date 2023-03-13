@@ -1,5 +1,5 @@
 from model.RobotArm import RobotArm
-from threading import Thread, threading
+from threading import Thread
 from protocol import *
 
 
@@ -48,7 +48,6 @@ def ServerUpdate(conn, robot):
     conn.sendall(protocol.getStringFromState(robot.getState()))
 
 
-lock = threading.Lock()
 updateThread = Thread(target=RobotUpdate, args=(robot, doContinue))
 updateThread.start()
 
