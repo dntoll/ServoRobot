@@ -30,7 +30,8 @@ PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 doContinue = True
 
 def RobotUpdate(robot, doContinue):
-    while doContinue:
+
+    while doContinue[0]:
         robot.update()
         print("RobotUpdate", flush=True)
         time.sleep(0.1)
@@ -48,7 +49,7 @@ def ServerUpdate(conn, robot):
 
 
 
-updateThread = Thread(target=RobotUpdate, args=[robot, doContinue])
+updateThread = Thread(target=RobotUpdate, args=[robot, [doContinue]])
 updateThread.start()
 
 print("Waiting for client:", flush=True)
@@ -63,10 +64,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 while doContinue:
                     ServerUpdate(conn, robot)
         except KeyboardInterrupt:
-
+            doContinue = False
             s.close()
             print("Keyboard interrupt catched", flush=True)
-            doContinue = False
+            
             print("Try to join", flush=True)
             updateThread.join()
             print("Thread joined", flush=True)
