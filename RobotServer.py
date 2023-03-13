@@ -33,7 +33,6 @@ def RobotUpdate(robot, cho):
     global doContinue
     while doContinue:
         robot.update()
-        print("RobotUpdate", flush=True)
         time.sleep(0.1)
     print("ended update thread", flush=True)
 
