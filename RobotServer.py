@@ -64,6 +64,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         except KeyboardInterrupt:
             doContinue = False
             s.close()
+            conn.close()
             print("Keyboard interrupt catched", flush=True)
             
             print("Try to join", flush=True)
