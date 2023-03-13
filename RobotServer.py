@@ -33,7 +33,7 @@ def RobotUpdate(robot, cho):
     global doContinue
     while doContinue:
         robot.update()
-        time.sleep(0.1)
+        time.sleep(0.01)
     print("ended update thread", flush=True)
 
 def ServerUpdate(conn, robot):
@@ -65,7 +65,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     doContinueServer = ServerUpdate(conn, robot)
                     if doContinueServer is False:
                         break
-                print("Disconnected", flush=True)
+                print("Disconnected Client", flush=True)
     except KeyboardInterrupt:
         doContinue = False
         s.close()
