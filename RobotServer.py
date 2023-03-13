@@ -43,6 +43,7 @@ def ServerUpdate(conn, robot):
         conn.close()
         return False
     state = protocol.getStateFromString(data)
+    print("State Received: ", state)
     robot.setState(state)
     conn.sendall(protocol.getStringFromState(robot.getState()))
     return True
