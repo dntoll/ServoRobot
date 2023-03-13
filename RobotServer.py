@@ -1,5 +1,5 @@
 from model.RobotArm import RobotArm
-from threading import Thread
+from threading import Thread, threading
 from protocol import *
 
 
@@ -31,7 +31,7 @@ doContinue = True
 
 def RobotUpdate(robot, doContinue):
 
-    while doContinue[0]:
+    while doContinue:
         robot.update()
         print("RobotUpdate", flush=True)
         time.sleep(0.1)
@@ -48,8 +48,8 @@ def ServerUpdate(conn, robot):
     conn.sendall(protocol.getStringFromState(robot.getState()))
 
 
-
-updateThread = Thread(target=RobotUpdate, args=[robot, [doContinue]])
+lock = threading.Lock()
+updateThread = Thread(target=RobotUpdate, args=(robot, doContinue))
 updateThread.start()
 
 print("Waiting for client:", flush=True)
