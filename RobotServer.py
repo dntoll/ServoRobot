@@ -52,31 +52,19 @@ updateThread.start()
 
 print("Waiting for client:", flush=True)
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    
-    while doContinue:
-        try:
-            s.bind((HOST, PORT))
-            s.listen()
+    try:
+        s.bind((HOST, PORT))
+        s.listen()
+        while doContinue:
             conn, addr = s.accept()
             with conn:
                 print(f"Connected by {addr}", flush=True)
                 while doContinue:
                     ServerUpdate(conn, robot)
-        except KeyboardInterrupt:
-            doContinue = False
-            s.close()
-            conn.close()
-            print("Keyboard interrupt catched", flush=True)
-            
-            print("Try to join", flush=True)
-            updateThread.join()
-            print("Thread joined", flush=True)
-            # quit
-            
-            
-            
-            
-            doContinue = False
-        except Exception as e:
-            
-            print("shit happened", e)
+    except KeyboardInterrupt:
+        doContinue = False
+        s.close()
+        conn.close()
+        updateThread.join()
+    except Exception as e:
+        print("Exception happened", e)
