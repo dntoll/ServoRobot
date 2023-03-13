@@ -52,7 +52,7 @@ print("Hej")
 
 from tkinter import Tk
 
-file_name = 'recording.pkl'
+file_name = 'recordings/rubber.pkl'
 recording = []
 
 try:

@@ -56,12 +56,21 @@ class RobotArmView(Frame):
     
     def stopWristFromControl(self, event):
         self.wristIsControlled = False
+
+    def duplicateCurrentState(self):
+        if self.wantsToAppend:
+            return
+        
+        self.recording.insert(self.editIndex, copy.copy(self.recording[self.editIndex]))
+
     
     def key_released(self, event):
         if event.char == 's':
             self.wantsToSave = True
         elif event.char == 'r':
             self.wantsReplay = True
+        elif event.char == 'c':
+            self.duplicateCurrentState()
         elif event.char == 'n':
             self.arm.Relax()
             self.lastState = self.arm.getState()
@@ -93,7 +102,20 @@ class RobotArmView(Frame):
             else:
                 self.lastState = copy.copy(self.recording[self.editIndex])
                 self.hasNewState = True
-                
+        elif event.char > '0' and event.char < '9':
+            num = int(event.char)
+
+            if num == 2:
+                self.lastState.heightOverBase -= 0.5
+            elif num == 8:
+                self.lastState.heightOverBase += 0.5
+            elif num == 4:
+                self.lastState.distanceFromBase -= 0.5
+            elif num == 6:
+                self.lastState.distanceFromBase += 0.5
+            else:
+                return
+            self.hasNewState = True
 
 
     def wrist(self, event):
@@ -212,9 +234,9 @@ class RobotArmView(Frame):
         for x in self.recording:
             recording = str(x)
             
-            self.canvas.create_text(120, 30+i*10, text=recording, fill="red", font=('Helvetica 9 bold'))
+            self.canvas.create_text(self.width/2, 30+i*10, text=recording, fill="red", font=('Helvetica 9 bold'))
             if self.wantsToAppend is False and self.editIndex == i:
-                self.canvas.create_text(20, 30+i*10, text="*", fill="red", font=('Helvetica 9 bold'))
+                self.canvas.create_text(self.width/2 -120, 30+i*10, text="*", fill="red", font=('Helvetica 9 bold'))
             i += 1
              
     
