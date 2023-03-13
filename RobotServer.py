@@ -59,13 +59,15 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     robot.setState(state)
                     conn.sendall(protocol.getStringFromState(robot.getState()))
         except KeyboardInterrupt:
+
+            s.close()
             print("Keyboard interrupt catched", flush=True)
             doContinue = False
             print("Try to join", flush=True)
             updateThread.join()
             print("Thread joined", flush=True)
             # quit
-            s.close()
+            
             sys.exit()
             
             
