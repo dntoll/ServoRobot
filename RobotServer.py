@@ -35,8 +35,17 @@ def RobotUpdate(robot, doContinue):
         time.sleep(0.1)
     print("ended update thread", flush=True)
 
+def ServerUpdate(conn, robot):
+    protocol = Protocol()
+    data = conn.recv(1024)
+    if not data:
+        print("no data baby!");
+        return
+    state = protocol.getStateFromString(data)
+    robot.setState(state)
+    conn.sendall(protocol.getStringFromState(robot.getState()))
 
-protocol = Protocol()
+
 
 updateThread = Thread(target=RobotUpdate, args=[robot, doContinue])
 updateThread.start()
@@ -51,13 +60,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             with conn:
                 print(f"Connected by {addr}", flush=True)
                 while doContinue:
-                    data = conn.recv(1024)
-                    if not data:
-                        print("no data baby!");
-                        break
-                    state = protocol.getStateFromString(data)
-                    robot.setState(state)
-                    conn.sendall(protocol.getStringFromState(robot.getState()))
+                    ServerUpdate(conn, robot)
         except KeyboardInterrupt:
 
             s.close()
@@ -68,7 +71,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             print("Thread joined", flush=True)
             # quit
             
-            sys.exit()
+            
             
             
             doContinue = False
