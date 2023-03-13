@@ -1,6 +1,6 @@
 from model.RobotArm import RobotArm
 from threading import Thread
-from Protocol import Protocol
+from Protocol import *
 
 
 import socket
