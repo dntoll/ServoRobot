@@ -61,7 +61,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             with conn:
                 print(f"Connected by {addr}", flush=True)
                 doContinueServer = True
-                while True
+                while True:
                     doContinueServer = ServerUpdate(conn, robot)
                     if doContinueServer is False:
                         break
