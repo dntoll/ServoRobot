@@ -17,7 +17,7 @@ try:
 except:
     from view.RobotArmView import RobotArmView
     real = False
-    from FakeKit import FakeKit    
+    from model.FakeKit import FakeKit    
     kit = FakeKit()
     robot = RobotArm(kit)
     HOST = "127.0.0.1"  # Standard loopback interface address (localhost)

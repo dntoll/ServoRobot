@@ -9,11 +9,12 @@ import math
 
 class RobotArmView(Frame):
 
-    def __init__(self, robotArm, root, recording):
+    def __init__(self, robotArm, root, recording, controller):
         super().__init__()
         self.arm = robotArm
         self.height = 384
         self.width = 1024
+        self.controller = controller
         self.leftViewMiddlePoint = (self.width/4, 2* self.height /3)
         self.rightViewMiddlePoint = (3*self.width/4, self.height / 2)
         self.debug = "hej"
@@ -72,49 +73,26 @@ class RobotArmView(Frame):
         elif event.char == 'r':
             self.wantsReplay = True
         elif event.char == 'c':
-            self.duplicateCurrentState()
+            self.controller.duplicateCurrentState()
         elif event.char == 'n':
-            self.arm.Relax()
-            self.lastState = self.arm.getState()
-            self.hasNewState = True
+            self.controller.setStateToRelax()
         elif event.char == 'd':
-            if self.wantsToAppend is False:
-                self.wantsToRemove = True
+            self.controller.removeCurrentState()
         elif event.char == '+':
-            self.wantsToAppend = False
-            self.editIndex += 1
-            if self.editIndex < 0 or self.editIndex >= len(self.recording):
-                self.editIndex = -1
-                self.wantsToAppend = True
-            else:
-                self.lastState = copy.copy(self.recording[self.editIndex])
-                self.hasNewState = True
+            self.controller.incrementState()
         elif event.char == '-':
-            self.editIndex -= 1
-            self.wantsToAppend = False
-
-            #we start at the end
-            if self.editIndex == -2:
-                self.editIndex = len(self.recording)-1
-
-            #check
-            if self.editIndex < 0:
-                self.editIndex = -1
-                self.wantsToAppend = True
-            else:
-                self.lastState = copy.copy(self.recording[self.editIndex])
-                self.hasNewState = True
+            self.controller.decrementState()
         elif event.char > '0' and event.char < '9':
             num = int(event.char)
-
+            distanceMoved = 0.5
             if num == 2:
-                self.lastState.heightOverBase -= 0.5
+                self.controller.alterState(0.0, -distanceMoved, 0.0, 0.0)
             elif num == 8:
-                self.lastState.heightOverBase += 0.5
+                self.controller.alterState(0.0, distanceMoved, 0.0, 0.0)
             elif num == 4:
-                self.lastState.distanceFromBase -= 0.5
+                self.controller.alterState(-distanceMoved, 0.0, 0.0, 0.0)
             elif num == 6:
-                self.lastState.distanceFromBase += 0.5
+                self.controller.alterState(distanceMoved, 0.0, 0.0, 0.0)
             else:
                 return
             self.hasNewState = True
@@ -124,16 +102,11 @@ class RobotArmView(Frame):
         
         distanceMove = 0.17
         if event.delta > 0:
-            self.lastState.wristWorldAngleRadians = self.arm.getState().wristWorldAngleRadians +distanceMove
+            self.controller.alterState(0, 0.0, 0.0, distanceMove)
         else:
-            self.lastState.wristWorldAngleRadians = self.arm.getState().wristWorldAngleRadians -distanceMove
+            self.controller.alterState(0, 0.0, 0.0, -distanceMove)
 
-        self.wristIsControlled = True
-        self.hasNewState = True
-
-        print("arm state", self.arm.getState().wristWorldAngleRadians, flush=True)
-        print("target state", self.lastState.wristWorldAngleRadians, flush=True)
-
+        
     def grip(self, event):
         if self.gripIsOpen:
             self.lastState.grip = RobotArm.GRIP_OPEN
@@ -152,17 +125,15 @@ class RobotArmView(Frame):
             ydiff = self.leftViewMiddlePoint[1]-150 - abs_coord_y
             xdiff = self.leftViewMiddlePoint[0] - abs_coord_x
             angle = math.atan2(ydiff, xdiff)
-            self.lastState.wristWorldAngleRadians = angle
-
+            
+            self.controller.setWrist(angle)
         if abs_coord_x < self.width/2:
             robotX = (abs_coord_x - self.leftViewMiddlePoint[0])/self.scale
             robotY = (abs_coord_y - self.leftViewMiddlePoint[1])/self.scale
 
             
-
-            self.lastState.distanceFromBase = robotX
-            self.lastState.heightOverBase = robotY
-            self.hasNewState = True
+            self.controller.setDistanceHeight(robotX, robotY)
+            
         else:
             #mouse is on the right side
             x = abs_coord_x - self.rightViewMiddlePoint[0]
@@ -175,14 +146,9 @@ class RobotArmView(Frame):
                 rotationAngle += 6.28
 
                 
+            self.controller.setDistanceRotation(distance, rotationAngle)        
 
-            self.lastState.rotationRadians = rotationAngle
-            self.lastState.distanceFromBase = distance
-            self.hasNewState = True
         
-
-        if self.lastState.distanceFromBase < 0:
-            self.lastState.distanceFromBase = 0
 
     def draw(self):
         lap = self.arm.lowerArmBone.getPos()

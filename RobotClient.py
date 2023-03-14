@@ -6,6 +6,7 @@ from pynput import mouse
 from view.RobotArmView import RobotArmView
 from model.RobotState import RobotState
 from model.Recording import Recording
+from controller.Controller import Controller 
 import pickle
 import time
 import socket
@@ -17,15 +18,17 @@ from Protocol import *
 fake = FakeKit()
 robot = RobotArm(fake)
 robot.Relax()
+recording = Recording(robot.getState())
 protocol = Protocol()
-
+controller = Controller(robot, recording)
 
 x = 20
 y = 20
 w = 0
 globalS = None
 
-HOST = "192.168.188.96"  # The server's hostname or IP address
+#HOST = "192.168.188.96"  # The server's hostname or IP address
+HOST = "127.0.0.1"  # The server's hostname or IP address
 PORT = 65432  # The port used by the server
 
 omx = 0
@@ -54,7 +57,7 @@ print("Hej")
 from tkinter import Tk
 
 file_name = 'recordings/rubber.pkl'
-recording = Recording(robot.getState())
+
 
 try:
     with open(file_name, 'rb') as file:
@@ -69,7 +72,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect((HOST, PORT))
 
     root = Tk()
-    view = RobotArmView(robot, root, recording)
+    view = RobotArmView(robot, root, recording, controller)
 
     print("connected")
     globalS = s
@@ -78,11 +81,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             time.sleep(0.1)
 
 
-            if view.wantsToRemove:
-                if view.wantsToAppend is False:
-                    del recording[view.editIndex]
-                    view.wantsToAppend = True
-                    view.wantsToRemove = False
 
             if view.userWantsToSave():
                 if view.wantsToAppend:
