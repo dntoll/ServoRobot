@@ -194,7 +194,8 @@ class RobotArmView(Frame):
         for x in self.recording.recording:
             recording = str(x)
             
-            self.canvas.create_text(self.width/2, 30+i*10, text=recording, fill="red", font=('Helvetica 9 bold'))
+            
+            self.canvas.create_text(self.width/2, 30 + i*10, text=recording, fill="red", font=('Helvetica 9 bold'))
             if self.recording.wantsToAppend is False and self.recording.editIndex == i:
                 self.canvas.create_text(self.width/2 -120, 30+i*10, text="*", fill="red", font=('Helvetica 9 bold'))
             i += 1

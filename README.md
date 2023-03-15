@@ -18,3 +18,6 @@ https://scikit-learn.org/stable/modules/generated/sklearn.cross_decomposition.PL
 
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/github
+
+
+ssh dntoll@192.168.188.96

@@ -27,8 +27,8 @@ y = 20
 w = 0
 globalS = None
 
-#HOST = "192.168.188.96"  # The server's hostname or IP address
-HOST = "127.0.0.1"  # The server's hostname or IP address
+HOST = "192.168.188.96"  # The server's hostname or IP address
+#HOST = "127.0.0.1"  # The server's hostname or IP address
 PORT = 65432  # The port used by the server
 
 remoteRobot = RemoteRobot(protocol, HOST, PORT)
