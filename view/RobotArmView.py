@@ -21,14 +21,12 @@ class RobotArmView(Frame):
         
         self.recording = recording
         self.lastState = robotArm.getState()
-        self.editIndex = -1
         self.wantsToAppend = True
 
         self.scale = -5
         self.root = root
         self.initUI()
         
-        self.hasNewState = False
         self.gripIsOpen = False
         self.wristIsControlled = False
         self.wantsReplay = False
@@ -60,16 +58,9 @@ class RobotArmView(Frame):
     def stopWristFromControl(self, event):
         self.wristIsControlled = False
 
-    def duplicateCurrentState(self):
-        if self.wantsToAppend:
-            return
-        
-        self.recording.insert(self.editIndex, copy.copy(self.recording[self.editIndex]))
-
-    
     def key_released(self, event):
         if event.char == 's':
-            self.wantsToSave = True
+            self.controller.save()
         elif event.char == 'r':
             self.wantsReplay = True
         elif event.char == 'c':
@@ -90,9 +81,9 @@ class RobotArmView(Frame):
             elif num == 8:
                 self.controller.alterState(0.0, distanceMoved, 0.0, 0.0)
             elif num == 4:
-                self.controller.alterState(-distanceMoved, 0.0, 0.0, 0.0)
-            elif num == 6:
                 self.controller.alterState(distanceMoved, 0.0, 0.0, 0.0)
+            elif num == 6:
+                self.controller.alterState(-distanceMoved, 0.0, 0.0, 0.0)
             else:
                 return
             self.hasNewState = True
@@ -125,6 +116,7 @@ class RobotArmView(Frame):
             ydiff = self.leftViewMiddlePoint[1]-150 - abs_coord_y
             xdiff = self.leftViewMiddlePoint[0] - abs_coord_x
             angle = math.atan2(ydiff, xdiff)
+            print("ydiff, xdiff, angle", ydiff, xdiff, angle*360/2.0*3.14)
             
             self.controller.setWrist(angle)
         if abs_coord_x < self.width/2:
@@ -197,13 +189,13 @@ class RobotArmView(Frame):
 
         self.canvas.create_text(20, 20, text=self.debug, fill="red", font=('Helvetica 9 bold'))
 
-
+        #RecordingView
         i = 0
-        for x in self.recording:
+        for x in self.recording.recording:
             recording = str(x)
             
             self.canvas.create_text(self.width/2, 30+i*10, text=recording, fill="red", font=('Helvetica 9 bold'))
-            if self.wantsToAppend is False and self.editIndex == i:
+            if self.recording.wantsToAppend is False and self.recording.editIndex == i:
                 self.canvas.create_text(self.width/2 -120, 30+i*10, text="*", fill="red", font=('Helvetica 9 bold'))
             i += 1
              
@@ -211,18 +203,6 @@ class RobotArmView(Frame):
         self.root.update_idletasks()
         self.root.update()
 
-    
-
-    def hasNewTargetState(self):
-        
-        abs_coord_x = self.root.winfo_pointerx() - self.root.winfo_x()
-        abs_coord_y = self.root.winfo_pointery() - self.root.winfo_y() - 30
-
-
-        if abs_coord_x < 0 or abs_coord_y < 0 or abs_coord_x > self.width or abs_coord_y > self.height:
-            return False
-        
-        return self.hasNewState
     
     def userWantsReplay(self):
         return self.wantsReplay
@@ -233,7 +213,4 @@ class RobotArmView(Frame):
             return True
         return False
     
-    def getTargetState(self):
-        self.hasNewState = False
-        return self.lastState
 

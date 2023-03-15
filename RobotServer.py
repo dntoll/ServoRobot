@@ -74,3 +74,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         updateThread.join()
     except Exception as e:
         print("Exception happened", e)
+        doContinue = False
+        s.close()
+        conn.close()
+        updateThread.join()

@@ -1,9 +1,9 @@
 from Lib import copy
+import pickle
 
 class Recording:
-    def __init__(self, initialState):
+    def __init__(self):
         self.recording = []
-        self.lastState = initialState
         self.editIndex = -1
         self.wantsToAppend = True
 
@@ -11,6 +11,13 @@ class Recording:
         if self.wantsToAppend: #We dont have a current state
             return
         self.recording.insert(self.editIndex, copy.copy(self.recording[self.editIndex]))
+
+    def add(self, newState):
+        if self.wantsToAppend:
+            self.recording.append(copy.copy(newState))
+        else:
+            self.recording[self.editIndex] = copy.copy(newState)
+        
 
     def removeCurrentState(self):
         
@@ -20,17 +27,17 @@ class Recording:
         del self.recording[self.editIndex]
         self.wantsToAppend = True
 
-    def incrementState(self):
+    def incrementState(self, lastState):
         self.wantsToAppend = False
         self.editIndex += 1
         if self.editIndex < 0 or self.editIndex >= len(self.recording):
             self.editIndex = -1
             self.wantsToAppend = True
+            return lastState
         else:
-            self.lastState = copy.copy(self.recording[self.editIndex])
-            self.hasNewState = True
+            return copy.copy(self.recording[self.editIndex])
 
-    def decrementState(self):
+    def decrementState(self, lastState):
         self.editIndex -= 1
         self.wantsToAppend = False
 
@@ -42,6 +49,14 @@ class Recording:
         if self.editIndex < 0:
             self.editIndex = -1
             self.wantsToAppend = True
+            return lastState
         else:
-            self.lastState = copy.copy(self.recording[self.editIndex])
-            self.hasNewState = True
+            return copy.copy(self.recording[self.editIndex])
+    
+    def load(self, fileName):
+        try:
+            with open(fileName, 'rb') as file:
+                print("load")
+                recording = pickle.load(file)
+        except Exception as e:
+            print("File Load error", e, flush=True)

@@ -1,9 +1,11 @@
 class Controller:
-    def __init__(self, robot, recording):
+    def __init__(self, robot, recording, remoteRobot):
         self.robot = robot
         self.recording = recording
         self.hasNewState = False
         self.wristIsControlled = False
+        self.remoteRobot = remoteRobot
+        self.lastState = self.robot.getState()
     
 
     def duplicateCurrentState(self):
@@ -20,10 +22,12 @@ class Controller:
 
 
     def incrementState(self):
-        self.recording.incrementState()
+        self.lastState = self.recording.incrementState(self.lastState)
+        self.hasNewState = True
 
     def decrementState(self):
-        self.recording.decrementState()
+        self.lastState = self.recording.decrementState(self.lastState)
+        self.hasNewState = True
 
     def alterState(self, distanceFromBaseModifier, heightModifier, rotationModifier, wristAngle):
         self.lastState.heightOverBase += heightModifier
@@ -39,13 +43,15 @@ class Controller:
     def setWrist(self, newWrist):
         self.lastState.wristWorldAngleRadians = newWrist
         self.hasNewState = True
+        print("wrist")
 
     def setDistanceHeight(self, newDistance, newHeight):
-        self.lastState.heightOverBase = newDistance
-        self.lastState.distanceFromBase = newHeight
+        self.lastState.heightOverBase = newHeight
+        self.lastState.distanceFromBase = newDistance
         self.hasNewState = True
         if self.lastState.distanceFromBase < 0:
             self.lastState.distanceFromBase = 0
+        print("distanceHeight")
 
     def setDistanceRotation(self, newDistance, newHeight, newRotation, newWrist):
         self.lastState.heightOverBase = newDistance
@@ -64,22 +70,23 @@ class Controller:
         #    pickle.dump(recording, file)
 
     def update(self):
-         if view.userWantsToSave():
                 
 
-        if view.hasNewTargetState():
-            state = view.getTargetState()
-            sendPos(globalS, state)
+        if self.hasNewState:
+            self.robot.setState(self.lastState)
+            self.remoteRobot.sendPos(self.lastState)
+            self.hasNewState = False
         
-        if view.userWantsReplay():
-            print("Replay", flush=True)
-            view.wantsReplay = False
-            for state in recording:
-                sendPos(globalS, state)
-                time.sleep(1.5)
-                while robot.update() is False:
-                    print("wait", flush=True)
-            print("Done", flush=True)
-        view.draw()
-        robot.update()
+        #if view.userWantsReplay():
+        #    print("Replay", flush=True)
+        #    view.wantsReplay = False
+        #    for state in recording:
+        #        self.remoteRobot.sendPos(state)
+        #        time.sleep(1.5)
+        #        while robot.update() is False:
+        #            print("wait", flush=True)
+        #    print("Done", flush=True)
+
+        
+        self.robot.update()
             
