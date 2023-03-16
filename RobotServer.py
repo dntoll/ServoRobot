@@ -36,7 +36,7 @@ def RobotUpdate(robot, cho):
             robot.update()
             time.sleep(0.03)
         except Exception as e:
-            print(e)
+            print("RobotUpdate: ", e)
     print("ended update thread", flush=True)
 
 def ServerUpdate(conn, robot):
