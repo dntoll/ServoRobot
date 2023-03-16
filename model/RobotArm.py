@@ -52,7 +52,7 @@ class RobotArm:
 
     def getState(self):
         wp = self.wristBone.getPos()
-        return RobotState(wp.x, wp.y, self.rotate.getAngleRadians(), self.wristBone.getWorldAngleRadians(), self.grip.getAngleRadians(), self.state)
+        return RobotState(wp.x, wp.y, self.rotate.getAngleRadians(), self.wristBone.getWorldAngleRadians(), self.grip.getAngleRadians(), self.name)
     
     def update(self):
         isDone = True

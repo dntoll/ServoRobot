@@ -13,7 +13,7 @@ class Recording:
             return
         self.recording.insert(self.editIndex, copy.copy(self.recording[self.editIndex]))
 
-    def add(self, newState):
+    def save(self, newState):
         if self.wantsToAppend:
             self.recording.append(copy.copy(newState))
         else:
@@ -30,6 +30,11 @@ class Recording:
         
         del self.recording[self.editIndex]
         self.wantsToAppend = True
+
+    def setCurrentIndex(self, index):
+        self.wantsToAppend = False
+        self.editIndex = index
+        return copy.copy(self.recording[self.editIndex])
 
     def incrementState(self, lastState):
         self.wantsToAppend = False
@@ -65,3 +70,4 @@ class Recording:
                 self.recording = pickle.load(file)
         except Exception as e:
             print("File Load error", e, flush=True)
+            

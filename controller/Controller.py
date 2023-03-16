@@ -32,6 +32,10 @@ class Controller:
         self.lastState = self.recording.decrementState(self.lastState)
         self.hasNewState = True
 
+    def setCurrentIndex(self, index):
+        self.lastState = self.recording.setCurrentIndex(index)
+        self.hasNewState = True
+
     def alterState(self, distanceFromBaseModifier, heightModifier, rotationModifier, wristAngle):
         self.lastState.heightOverBase += heightModifier
         self.lastState.distanceFromBase += distanceFromBaseModifier
@@ -64,8 +68,12 @@ class Controller:
         if self.lastState.distanceFromBase < 0:
             self.lastState.distanceFromBase = 0
 
+    def setState(self, state):
+        self.lastState = state
+        self.hasNewState = True
+
     def save(self):
-        self.recording.add(self.lastState)
+        self.recording.save(self.lastState)
     
     def grip(self):
         if self.lastState.grip == RobotArm.GRIP_CLOSED:

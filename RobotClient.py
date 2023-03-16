@@ -45,7 +45,8 @@ while True:
     except KeyboardInterrupt:
         remoteRobot.close()
         sys.exit(0)
-    except Exception:
+    except Exception as e:
+        print("RobotClient", e)
         remoteRobot.close()
         sys.exit(0)
         

@@ -46,7 +46,7 @@ class RobotArmView(tk.Frame):
 
         self.canvas = tk.Canvas(self, width=500, height=500)
         self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-        self.editor_view = RobotEditorView(self, self.recording.recording)
+        self.editor_view = RobotEditorView(self, self.recording.recording, self.controller)
         self.editor_view.pack(side=tk.RIGHT, fill=tk.Y)
 
         self.keyView = KeyView(self, self.controller)
