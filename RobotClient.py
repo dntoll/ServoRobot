@@ -11,7 +11,7 @@ from controller.Controller import Controller
 
 import time
 
-
+from tkinter import Tk
 import sys
 from Protocol import *
 
@@ -40,12 +40,6 @@ omy = 0
 firstMove = True
 
 
-
-
-    
-    
-
-from tkinter import Tk
 
 
 

@@ -2,7 +2,9 @@ import cv2
 import numpy as np
 from tkinter import Tk, Canvas, Frame, BOTH, ttk
 from model.Vector3 import Vector3
-from model.RobotArm import RobotArm
+from view.KeyView import KeyView
+from view.MouseView import MouseView
+
 from Lib import copy
 
 import math
@@ -22,13 +24,13 @@ class RobotArmView(Frame):
         self.recording = recording
         self.lastState = robotArm.getState()
         self.wantsToAppend = True
-
         self.scale = -5
+        
         self.root = root
         self.initUI()
         
         self.gripIsOpen = False
-        self.wristIsControlled = False
+        
         self.wantsReplay = False
         self.wantsToSave = False
         self.wantsToRemove = False
@@ -45,101 +47,12 @@ class RobotArmView(Frame):
         ttk.Button(self, text="Quit", command=self.root.destroy)
 
         self.canvas = Canvas(self)
-        self.canvas.bind('<B1-Motion>', self.mouseMoveWithButtonDown)
-        self.canvas.bind('<Button-1>', self.mouseMoveWithButtonDown)
-        self.canvas.bind('<MouseWheel>', self.wrist)
-        self.canvas.bind('<Button-2>', self.stopWristFromControl)
-        self.canvas.bind('<Button-3>', self.grip)
-        #self.bind('<KeyPress>', self.key_released )
-        self.bind('<KeyRelease>', self.key_released )
+
+        self.keyView = KeyView(self.canvas, self.controller)
+        self.mouseView = MouseView(self.canvas, self.controller, self.root, self.leftViewMiddlePoint, self.rightViewMiddlePoint, self.width, self.scale)
+
         self.canvas.pack(fill=BOTH, expand=1)    
         self.focus_set()
-    
-    def stopWristFromControl(self, event):
-        self.wristIsControlled = False
-
-    def key_released(self, event):
-        if event.char == 's':
-            self.controller.save()
-        elif event.char == 'r':
-            self.wantsReplay = True
-        elif event.char == 'c':
-            self.controller.duplicateCurrentState()
-        elif event.char == 'n':
-            self.controller.setStateToRelax()
-        elif event.char == 'd':
-            self.controller.removeCurrentState()
-        elif event.char == '+':
-            self.controller.incrementState()
-        elif event.char == '-':
-            self.controller.decrementState()
-        elif event.char > '0' and event.char < '9':
-            num = int(event.char)
-            distanceMoved = 0.5
-            if num == 2:
-                self.controller.alterState(0.0, -distanceMoved, 0.0, 0.0)
-            elif num == 8:
-                self.controller.alterState(0.0, distanceMoved, 0.0, 0.0)
-            elif num == 4:
-                self.controller.alterState(distanceMoved, 0.0, 0.0, 0.0)
-            elif num == 6:
-                self.controller.alterState(-distanceMoved, 0.0, 0.0, 0.0)
-            else:
-                return
-            self.hasNewState = True
-
-
-    def wrist(self, event):
-        
-        distanceMove = 0.17
-        if event.delta > 0:
-            self.controller.alterState(0, 0.0, 0.0, distanceMove)
-        else:
-            self.controller.alterState(0, 0.0, 0.0, -distanceMove)
-
-        
-    def grip(self, event):
-        if self.gripIsOpen:
-            self.lastState.grip = RobotArm.GRIP_OPEN
-        else:
-            self.lastState.grip = RobotArm.GRIP_CLOSED
-        self.hasNewState = True
-        self.gripIsOpen = not self.gripIsOpen
-        
-
-    def mouseMoveWithButtonDown(self, event):
-        abs_coord_x = self.root.winfo_pointerx() - self.root.winfo_x() -10
-        abs_coord_y = self.root.winfo_pointery() - self.root.winfo_y() - 30
-
-        if self.wristIsControlled is False:
-
-            ydiff = self.leftViewMiddlePoint[1]-150 - abs_coord_y
-            xdiff = self.leftViewMiddlePoint[0] - abs_coord_x
-            angle = math.atan2(ydiff, xdiff)
-            print("ydiff, xdiff, angle", ydiff, xdiff, angle*360/2.0*3.14)
-            
-            self.controller.setWrist(angle)
-        if abs_coord_x < self.width/2:
-            robotX = (abs_coord_x - self.leftViewMiddlePoint[0])/self.scale
-            robotY = (abs_coord_y - self.leftViewMiddlePoint[1])/self.scale
-
-            
-            self.controller.setDistanceHeight(robotX, robotY)
-            
-        else:
-            #mouse is on the right side
-            x = abs_coord_x - self.rightViewMiddlePoint[0]
-            y = abs_coord_y - self.rightViewMiddlePoint[1]
-
-            distance = - math.sqrt(x*x + y*y) / self.scale
-
-            rotationAngle = math.atan2(y, -x)
-            while rotationAngle < 0:
-                rotationAngle += 6.28
-
-                
-            self.controller.setDistanceRotation(distance, rotationAngle)        
-
         
 
     def draw(self):

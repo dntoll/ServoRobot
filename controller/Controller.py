@@ -1,3 +1,6 @@
+import time
+from model.RobotArm import RobotArm
+
 class Controller:
     def __init__(self, robot, recording, remoteRobot):
         self.robot = robot
@@ -53,11 +56,9 @@ class Controller:
             self.lastState.distanceFromBase = 0
         print("distanceHeight")
 
-    def setDistanceRotation(self, newDistance, newHeight, newRotation, newWrist):
+    def setDistanceRotation(self, newDistance, newRotation):
         self.lastState.heightOverBase = newDistance
-        self.lastState.distanceFromBase = newHeight
         self.lastState.rotationRadians = newRotation
-        self.lastState.wristWorldAngleRadians = newWrist
 
         self.hasNewState = True
         if self.lastState.distanceFromBase < 0:
@@ -65,27 +66,34 @@ class Controller:
 
     def save(self):
         self.recording.add(self.lastState)
-        
-        #with open(file_name, 'wb') as file:
-        #    pickle.dump(recording, file)
+    
+    def grip(self):
+        if self.lastState.grip == RobotArm.GRIP_CLOSED:
+            self.lastState.grip = RobotArm.GRIP_OPEN
+        else:
+            self.lastState.grip = RobotArm.GRIP_CLOSED
+        self.hasNewState = True
+
+    
+    def play(self):
+        for state in self.recording.recording:
+            self.remoteRobot.sendPos(state)
+            self.robot.setState(self.lastState)
+            time.sleep(1.5)
+            while self.robot.update() is False:
+                print("wait", flush=True)
+    
 
     def update(self):
                 
 
         if self.hasNewState:
-            self.robot.setState(self.lastState)
-            self.remoteRobot.sendPos(self.lastState)
-            self.hasNewState = False
-        
-        #if view.userWantsReplay():
-        #    print("Replay", flush=True)
-        #    view.wantsReplay = False
-        #    for state in recording:
-        #        self.remoteRobot.sendPos(state)
-        #        time.sleep(1.5)
-        #        while robot.update() is False:
-        #            print("wait", flush=True)
-        #    print("Done", flush=True)
+            try:
+                self.robot.setState(self.lastState)
+                self.remoteRobot.sendPos(self.lastState)
+                self.hasNewState = False
+            except Exception as e:
+                print(e)
 
         
         self.robot.update()

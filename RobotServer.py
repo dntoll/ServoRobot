@@ -44,9 +44,15 @@ def ServerUpdate(conn, robot):
         return False
     state = protocol.getStateFromString(data)
     print("State Received: ", state)
-    robot.setState(state)
-    conn.sendall(protocol.getStringFromState(robot.getState()))
-    return True
+
+    try:
+        robot.setState(state)
+        conn.sendall(protocol.getStringFromState(robot.getState()))
+        return True
+    except Exception as e:
+        print(e)
+    
+    return False
 
 cho = "cho"
 updateThread = Thread(target=RobotUpdate, args=(robot, cho))

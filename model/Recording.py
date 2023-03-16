@@ -6,6 +6,7 @@ class Recording:
         self.recording = []
         self.editIndex = -1
         self.wantsToAppend = True
+        self.fileName = "";
 
     def duplicateCurrentState(self):
         if self.wantsToAppend: #We dont have a current state
@@ -17,6 +18,9 @@ class Recording:
             self.recording.append(copy.copy(newState))
         else:
             self.recording[self.editIndex] = copy.copy(newState)
+
+        with open(self.fileName, 'wb') as file:
+            pickle.dump(self.recording, file)
         
 
     def removeCurrentState(self):
@@ -54,9 +58,10 @@ class Recording:
             return copy.copy(self.recording[self.editIndex])
     
     def load(self, fileName):
+        self.fileName = fileName
         try:
             with open(fileName, 'rb') as file:
                 print("load")
-                recording = pickle.load(file)
+                self.recording = pickle.load(file)
         except Exception as e:
             print("File Load error", e, flush=True)
