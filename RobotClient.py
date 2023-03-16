@@ -32,17 +32,6 @@ HOST = "192.168.188.96"  # The server's hostname or IP address
 PORT = 65432  # The port used by the server
 
 remoteRobot = RemoteRobot(protocol, HOST, PORT)
-
-
-
-omx = 0
-omy = 0
-firstMove = True
-
-
-
-
-
 recording.load('recordings/rubber.pkl')
 
 root = Tk()
@@ -54,6 +43,9 @@ while True:
         controller.update()
         view.draw()
     except KeyboardInterrupt:
+        remoteRobot.close()
+        sys.exit(0)
+    except Exception:
         remoteRobot.close()
         sys.exit(0)
         

@@ -50,6 +50,16 @@ class MouseView:
             ydiff = self.leftViewMiddlePoint[1]-150 - abs_coord_y
             xdiff = self.leftViewMiddlePoint[0] - abs_coord_x
             angle = math.atan2(ydiff, xdiff)
+
+            while angle < 0:
+                angle += 2.0*math.pi
+            
+            while angle > 2.0*math.pi:
+                angle += 2.0*math.pi
+            
+            if angle < math.pi:
+                angle = angle + math.pi
+
             print("ydiff, xdiff, angle", ydiff, xdiff, angle*360/2.0*3.14)
             
             self.controller.setWrist(angle)
