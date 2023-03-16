@@ -38,7 +38,7 @@ class RobotArm:
 
         self.upperArmBone.setParent(self.lowerArmBone)  
         self.wristBone.setParent(self.upperArmBone)
-    
+        self.name = "unnamed"
         
         
     #def setState(self, rotate, shoulder, elbow, wrist, grip):
@@ -52,7 +52,7 @@ class RobotArm:
 
     def getState(self):
         wp = self.wristBone.getPos()
-        return RobotState(wp.x, wp.y, self.rotate.getAngleRadians(), self.wristBone.getWorldAngleRadians(), self.grip.getAngleRadians())
+        return RobotState(wp.x, wp.y, self.rotate.getAngleRadians(), self.wristBone.getWorldAngleRadians(), self.grip.getAngleRadians(), self.state)
     
     def update(self):
         isDone = True
@@ -104,7 +104,7 @@ class RobotArm:
             self.grip.setAngleDegrees(state.grip)
             self.rotate.setAngleRadians(state.rotationRadians)
             self.wristBone.setWorldAngleRadians(state.wristWorldAngleRadians)
-            
+            self.name = state.name 
             
 
 

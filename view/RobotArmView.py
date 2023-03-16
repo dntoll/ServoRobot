@@ -1,16 +1,18 @@
 import cv2
 import numpy as np
-from tkinter import Tk, Canvas, Frame, BOTH, ttk
+import tkinter as tk
+from tkinter import ttk
 from model.Vector3 import Vector3
 from view.KeyView import KeyView
 from view.MouseView import MouseView
+from view.RobotEditorView import RobotEditorView
 from model.RobotArm import RobotArm
 from model.FakeKit import FakeKit    
 from Lib import copy
 
 import math
 
-class RobotArmView(Frame):
+class RobotArmView(tk.Frame):
 
     def __init__(self, robotArm, root, recording, controller):
         super().__init__()
@@ -30,11 +32,6 @@ class RobotArmView(Frame):
         self.root = root
         self.initUI()
         
-        self.gripIsOpen = False
-        
-        self.wantsReplay = False
-        self.wantsToSave = False
-        self.wantsToRemove = False
         
 
     def initUI(self):
@@ -42,17 +39,20 @@ class RobotArmView(Frame):
         self.root.geometry(str(self.width) + "x" + str(self.height))
 
         self.master.title("Robot")
-        self.pack(fill=BOTH, expand=1)
+        self.pack(fill=tk.BOTH, expand=1)
 
 
         ttk.Button(self, text="Quit", command=self.root.destroy)
 
-        self.canvas = Canvas(self)
+        self.canvas = tk.Canvas(self, width=500, height=500)
+        self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.editor_view = RobotEditorView(self, self.recording.recording)
+        self.editor_view.pack(side=tk.RIGHT, fill=tk.Y)
 
         self.keyView = KeyView(self, self.controller)
         self.mouseView = MouseView(self.canvas, self.controller, self.root, self.leftViewMiddlePoint, self.rightViewMiddlePoint, self.width, self.scale)
 
-        self.canvas.pack(fill=BOTH, expand=1)    
+        self.canvas.pack(fill=tk.BOTH, expand=1)    
         self.focus_set()
         
 
