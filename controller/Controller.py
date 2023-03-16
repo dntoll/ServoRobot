@@ -57,7 +57,7 @@ class Controller:
         print("distanceHeight")
 
     def setDistanceRotation(self, newDistance, newRotation):
-        self.lastState.heightOverBase = newDistance
+        self.lastState.distanceFromBase = newDistance
         self.lastState.rotationRadians = newRotation
 
         self.hasNewState = True
