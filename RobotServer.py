@@ -32,8 +32,11 @@ doContinue = True
 def RobotUpdate(robot, cho):
     global doContinue
     while doContinue:
-        robot.update()
-        time.sleep(0.03)
+        try:
+            robot.update()
+            time.sleep(0.03)
+        except Exception as e:
+            print(e)
     print("ended update thread", flush=True)
 
 def ServerUpdate(conn, robot):
