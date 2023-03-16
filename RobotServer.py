@@ -60,27 +60,27 @@ updateThread.start()
 
 print("Waiting for client:", flush=True)
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    try:
-        s.bind((HOST, PORT))
-        s.listen()
+    
+        
         while doContinue:
-            conn, addr = s.accept()
-            with conn:
-                print(f"Connected by {addr}", flush=True)
-                doContinueServer = True
-                while True:
-                    doContinueServer = ServerUpdate(conn, robot)
-                    if doContinueServer is False:
-                        break
-                print("Disconnected Client", flush=True)
-    except KeyboardInterrupt:
-        doContinue = False
-        s.close()
-        conn.close()
-        updateThread.join()
-    except Exception as e:
-        print("Exception happened", e)
-        doContinue = False
-        s.close()
-        conn.close()
-        updateThread.join()
+            try:
+                s.bind((HOST, PORT))
+                s.listen()
+                conn, addr = s.accept()
+                with conn:
+                    print(f"Connected by {addr}", flush=True)
+                    doContinueServer = True
+                    while True:
+                        doContinueServer = ServerUpdate(conn, robot)
+                        if doContinueServer is False:
+                            break
+                    print("Disconnected Client", flush=True)
+            except KeyboardInterrupt:
+                doContinue = False
+                s.close()
+                conn.close()
+                updateThread.join()
+            except Exception as e:
+                print("Exception happened", e)
+                conn.close()
+    

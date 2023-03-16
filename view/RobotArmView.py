@@ -59,13 +59,32 @@ class RobotArmView(Frame):
         lap = self.arm.lowerArmBone.getPos()
         uap = self.arm.upperArmBone.getPos()
         wp = self.arm.wristBone.getPos()
-
-        
-
         bones = (lap, uap, wp)
 
         self.canvas.delete('all')
 
+        
+
+            
+        start_point = self.leftViewMiddlePoint
+        pos = str(int(wp.x*10)/10) + ", " + str(int(wp.y*10)/10)
+        self.canvas.create_text(start_point[0], start_point[1]-30, text=pos, fill="black", font=('Helvetica 9'))
+        start_point = self.rightViewMiddlePoint
+        
+
+        
+        self.drawSideView(bones)
+
+        #Draw a clock like directional 
+        self.drawTopView()
+
+        self.drawRecording()
+             
+    
+        self.root.update_idletasks()
+        self.root.update()
+
+    def drawSideView(self, bones):
         start_point = self.leftViewMiddlePoint
 
         #Ground
@@ -79,19 +98,16 @@ class RobotArmView(Frame):
             self.canvas.create_line(start_point[0], start_point[1], end_point[0], end_point[1])
             start_point = end_point
 
-            
-        
-        pos = str(int(wp.x*10)/10) + ", " + str(int(wp.y*10)/10)
-        self.canvas.create_text(start_point[0], start_point[1]-30, text=pos, fill="black", font=('Helvetica 9'))
-        start_point = self.rightViewMiddlePoint
-        
 
+    def drawTopView(self):
+        
+        start_point = self.rightViewMiddlePoint
         v = -60/360/(2.0*math.pi)
         length = 30 * self.scale
         end_point = (self.rightViewMiddlePoint[0] +  math.cos(v) * length, math.sin(v) * length + self.rightViewMiddlePoint[1])
         self.canvas.create_line(start_point[0], start_point[1], end_point[0], end_point[1])
 
-        #Draw a clock like directional 
+
         v = -self.arm.rotate.getAngleRadians()
         length = self.arm.getState().distanceFromBase * self.scale
         end_point = (self.rightViewMiddlePoint[0] +  math.cos(v) * length, math.sin(v) * length + self.rightViewMiddlePoint[1])
@@ -102,13 +118,7 @@ class RobotArmView(Frame):
 
         self.canvas.create_text(20, 20, text=self.debug, fill="red", font=('Helvetica 9 bold'))
 
-        self.drawRecording()
-             
-    
-        self.root.update_idletasks()
-        self.root.update()
-
-    def drawRecording(self)
+    def drawRecording(self):
         #RecordingView
         i = 0
         for x in self.recording.recording:
