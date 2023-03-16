@@ -102,6 +102,13 @@ class RobotArmView(Frame):
 
         self.canvas.create_text(20, 20, text=self.debug, fill="red", font=('Helvetica 9 bold'))
 
+        self.drawRecording()
+             
+    
+        self.root.update_idletasks()
+        self.root.update()
+
+    def drawRecording(self)
         #RecordingView
         i = 0
         for x in self.recording.recording:
@@ -112,11 +119,6 @@ class RobotArmView(Frame):
             if self.recording.wantsToAppend is False and self.recording.editIndex == i:
                 self.canvas.create_text(self.width/2 -120, 30+i*10, text="*", fill="red", font=('Helvetica 9 bold'))
             i += 1
-             
-    
-        self.root.update_idletasks()
-        self.root.update()
-
     
     def userWantsReplay(self):
         return self.wantsReplay
