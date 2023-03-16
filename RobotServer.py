@@ -78,6 +78,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                         if doContinueServer is False:
                             break
                     print("Disconnected Client", flush=True)
+                    conn.close()
             except KeyboardInterrupt:
                 doContinue = False
                 s.close()
@@ -85,5 +86,5 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 updateThread.join()
             except Exception as e:
                 print("Exception happened", e)
-                conn.close()
+                
     
