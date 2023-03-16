@@ -4,7 +4,8 @@ from tkinter import Tk, Canvas, Frame, BOTH, ttk
 from model.Vector3 import Vector3
 from view.KeyView import KeyView
 from view.MouseView import MouseView
-
+from model.RobotArm import RobotArm
+from model.FakeKit import FakeKit    
 from Lib import copy
 
 import math
@@ -85,17 +86,35 @@ class RobotArmView(Frame):
         self.root.update()
 
     def drawSideView(self, bones):
+        
+
+        for state in self.recording.recording:
+            r = RobotArm(FakeKit())
+            r.setState(state)
+            
+            self.drawRobot(self.leftViewMiddlePoint, r, "gray")    
+
+
+        self.drawRobot(self.leftViewMiddlePoint, self.arm, "red")
+
         start_point = self.leftViewMiddlePoint
 
         #Ground
         self.canvas.create_line(0, start_point[1]-self.scale*5, self.width/2, start_point[1] -self.scale*5)
         
+
+    def drawRobot(self, start_point, arm, color):
+        r = arm
+        lap = r.lowerArmBone.getPos()
+        uap = r.upperArmBone.getPos()
+        wp = r.wristBone.getPos()
+        bones = (lap, uap, wp)
         for bone in bones:
             bone = bone.mul(self.scale).add(Vector3(self.leftViewMiddlePoint[0], self.leftViewMiddlePoint[1], 0))
             end_point = (int(bone.x), int(bone.y))
             
             thickness = 1
-            self.canvas.create_line(start_point[0], start_point[1], end_point[0], end_point[1])
+            self.canvas.create_line(start_point[0], start_point[1], end_point[0], end_point[1], fill=color)
             start_point = end_point
 
 
