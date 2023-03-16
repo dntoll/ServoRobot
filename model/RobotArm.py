@@ -22,7 +22,7 @@ class RobotArm:
 
     WRIST_FULLY_DOWN = 0
     WRIST_NEUTRAL = 90
-    WRIST_FULLY_UP = 360
+    WRIST_FULLY_UP = 180
 
     def __init__(self, kit):
         self.kit = kit
