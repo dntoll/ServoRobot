@@ -53,7 +53,7 @@ def ServerUpdate(conn, robot):
         conn.sendall(protocol.getStringFromState(robot.getState()))
         return True
     except Exception as e:
-        print(e)
+        print("ServerUpdate: ", e)
     
     return False
 
