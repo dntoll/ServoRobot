@@ -64,8 +64,10 @@ class ServoJoint:
             
         try:
             self.kit.servo[self.index].angle = self.lastKnownAngle
-            return isDone
+            
         except Exception as e:
-            print("ServoJoint.update:", e)
+            print("ServoJoint.update:", e, self.index, self.lastKnownAngle)
+        
+        return isDone
         
 
