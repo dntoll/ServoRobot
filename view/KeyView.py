@@ -9,6 +9,7 @@ class KeyView:
 
 
     def key_released(self, event):
+        print("KeyEvent:", event)
         if event.char == 's':
             self.controller.save()
         elif event.char == 'r':

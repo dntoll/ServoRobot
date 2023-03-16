@@ -48,7 +48,7 @@ class RobotArmView(Frame):
 
         self.canvas = Canvas(self)
 
-        self.keyView = KeyView(self.canvas, self.controller)
+        self.keyView = KeyView(self, self.controller)
         self.mouseView = MouseView(self.canvas, self.controller, self.root, self.leftViewMiddlePoint, self.rightViewMiddlePoint, self.width, self.scale)
 
         self.canvas.pack(fill=BOTH, expand=1)    
