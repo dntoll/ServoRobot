@@ -11,30 +11,20 @@ class Controller:
         self.lastState = self.robot.getState()
     
 
-    def duplicateCurrentState(self):
-        self.recording.duplicateCurrentState()
+    def duplicateCurrentState(self, index):
+        self.recording.duplicateCurrentState(index)
 
-    def setStateToRelax(self):
+    def setStateToRelax(self, index):
+        oldname = self.lastState.name
         self.robot.Relax()
         self.lastState = self.robot.getState()
+        self.lastState.name = oldname
         self.hasNewState = True
 
-    def removeCurrentState(self):
+    def removeCurrentState(self, index):
 
-        self.recording.removeCurrentState()
+        self.recording.removeCurrentState(index)
 
-
-    def incrementState(self):
-        self.lastState = self.recording.incrementState(self.lastState)
-        self.hasNewState = True
-
-    def decrementState(self):
-        self.lastState = self.recording.decrementState(self.lastState)
-        self.hasNewState = True
-
-    def setCurrentIndex(self, index):
-        self.lastState = self.recording.setCurrentIndex(index)
-        self.hasNewState = True
 
     def alterState(self, distanceFromBaseModifier, heightModifier, rotationModifier, wristAngle):
         self.lastState.heightOverBase += heightModifier
@@ -72,8 +62,8 @@ class Controller:
         self.lastState = state
         self.hasNewState = True
 
-    def save(self):
-        self.recording.save(self.lastState)
+    def save(self, index):
+        self.recording.save(self.lastState, index)
     
     def grip(self):
         if self.lastState.grip == RobotArm.GRIP_CLOSED:
@@ -92,11 +82,12 @@ class Controller:
                 print("wait", flush=True)
     
 
-    def update(self):
+    def update(self, view):
                 
 
         if self.hasNewState:
             try:
+                view.setState(self.lastState)
                 self.robot.setState(self.lastState)
                 self.remoteRobot.sendPos(self.lastState)
                 self.hasNewState = False

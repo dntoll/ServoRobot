@@ -4,63 +4,30 @@ import pickle
 class Recording:
     def __init__(self):
         self.recording = []
-        self.editIndex = -1
-        self.wantsToAppend = True
         self.fileName = "";
 
-    def duplicateCurrentState(self):
-        if self.wantsToAppend: #We dont have a current state
-            return
-        self.recording.insert(self.editIndex, copy.copy(self.recording[self.editIndex]))
-
-    def save(self, newState):
-        if self.wantsToAppend:
-            self.recording.append(copy.copy(newState))
-        else:
-            self.recording[self.editIndex] = copy.copy(newState)
+    def duplicateCurrentState(self, index):
+        self.recording.insert(index, copy.copy(self.recording[index]))
 
         with open(self.fileName, 'wb') as file:
             pickle.dump(self.recording, file)
+
+    def save(self, newState, index):
+        self.recording[index] = copy.copy(newState)
+
+        with open(self.fileName, 'wb') as file:
+            pickle.dump(self.recording, file)
+
+    def get(self, index):
+        return copy.copy(self.recording[index])
         
 
-    def removeCurrentState(self):
-        
-        if self.wantsToAppend is False:
-            self.wantsToRemove = True
-        
-        del self.recording[self.editIndex]
+    def removeCurrentState(self, index):
+        del self.recording[index]
         self.wantsToAppend = True
 
-    def setCurrentIndex(self, index):
-        self.wantsToAppend = False
-        self.editIndex = index
-        return copy.copy(self.recording[self.editIndex])
-
-    def incrementState(self, lastState):
-        self.wantsToAppend = False
-        self.editIndex += 1
-        if self.editIndex < 0 or self.editIndex >= len(self.recording):
-            self.editIndex = -1
-            self.wantsToAppend = True
-            return lastState
-        else:
-            return copy.copy(self.recording[self.editIndex])
-
-    def decrementState(self, lastState):
-        self.editIndex -= 1
-        self.wantsToAppend = False
-
-        #we start at the end
-        if self.editIndex == -2:
-            self.editIndex = len(self.recording)-1
-
-        #check
-        if self.editIndex < 0:
-            self.editIndex = -1
-            self.wantsToAppend = True
-            return lastState
-        else:
-            return copy.copy(self.recording[self.editIndex])
+        with open(self.fileName, 'wb') as file:
+            pickle.dump(self.recording, file)
     
     def load(self, fileName):
         self.fileName = fileName

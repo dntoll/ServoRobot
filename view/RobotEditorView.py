@@ -43,22 +43,51 @@ class RobotEditorView(tk.Frame):
         
         # Create a save button
         self.save_button = tk.Button(self.edit_frame, text="Save", command=self.save)
-        self.save_button.grid(row=6, column=0, columnspan=2)
+        self.save_button.grid(row=6, column=0, columnspan=1)
+
+        self.copy_button = tk.Button(self.edit_frame, text="Copy", command=self.copy)
+        self.copy_button.grid(row=6, column=1, columnspan=1)
+
+        self.copy_button = tk.Button(self.edit_frame, text="Play", command=self.play)
+        self.copy_button.grid(row=6, column=2, columnspan=1)
+
+        self.copy_button = tk.Button(self.edit_frame, text="Relax", command=self.relax)
+        self.copy_button.grid(row=7, column=1, columnspan=1)
+
+        self.copy_button = tk.Button(self.edit_frame, text="Delete", command=self.removeCurrentState)
+        self.copy_button.grid(row=7, column=2, columnspan=1)
         
+
         # Initialize the edit fields with the first robot state
         self.current_index = 0
 
         self.update()
 
         if len(self.robot_states) > 0:
-            self.load_robot_state(self.robot_states[self.current_index])
+            self.setState(self.robot_states[self.current_index])
+    
+    def copy(self):
+        self.controller.duplicateCurrentState(self.current_index)
+        self.update()
+
+    def relax(self):
+        self.controller.setStateToRelax(self.current_index)
+        self.update()
+
+    def removeCurrentState(self):
+        self.controller.removeCurrentState(self.current_index)
+        self.update()
+
+    def play(self):
+        self.controller.play()
 
     def update(self):
         self.listbox.delete(0, tk.END)
         for i, state in enumerate(self.robot_states):
-            self.listbox.insert(tk.END, f"Robot {state.name}")
+            self.listbox.insert(tk.END, f"{state.name}")
+        self.listbox.select_set(self.current_index)
     
-    def load_robot_state(self, state):
+    def setState(self, state):
         self.name_entry.delete(0, tk.END)
         self.name_entry.insert(0, state.name)
 
@@ -73,22 +102,28 @@ class RobotEditorView(tk.Frame):
         self.grip_entry.delete(0, tk.END)
         self.grip_entry.insert(0, state.grip)
     
+
+
     def save(self):
 
 
         # Update the current robot state with the values in the edit fields
-        current_state = self.robot_states[self.current_index]
-        current_state.name = str(self.name_entry.get())
-        current_state.distanceFromBase = float(self.distance_entry.get())
-        current_state.heightOverBase = float(self.height_entry.get())
-        current_state.rotationRadians = float(self.rotation_entry.get())
-        current_state.wristWorldAngleRadians = float(self.wrist_angle_entry.get())
-        current_state.grip = float(self.grip_entry.get())
 
-        self.controller.setState(current_state)
-        self.controller.save(current_state)
+        try:
+            current_state = self.robot_states[self.current_index]
+            current_state.name = str(self.name_entry.get())
+            current_state.distanceFromBase = float(self.distance_entry.get())
+            current_state.heightOverBase = float(self.height_entry.get())
+            current_state.rotationRadians = float(self.rotation_entry.get())
+            current_state.wristWorldAngleRadians = float(self.wrist_angle_entry.get())
+            current_state.grip = float(self.grip_entry.get())
 
-        self.update()
+            self.controller.setState(current_state)
+            self.controller.save(self.current_index)
+
+            self.update()
+        except Exception as e:
+            print("RobotEditorView.save", e, flush=True)
 
         
 
@@ -99,10 +134,9 @@ class RobotEditorView(tk.Frame):
             print(self.listbox.curselection())
             selection_index = self.listbox.curselection()[0]
             self.current_index = selection_index
-
-            self.controller.setCurrentIndex(selection_index)
-            selected_state = self.robot_states[selection_index]
-            self.load_robot_state(selected_state)
+            selected_state = self.controller.recording.get(selection_index)
+            self.controller.setState(selected_state)
+            self.setState(selected_state)
         except Exception as e:
             print("RobotEditorView", e)
 

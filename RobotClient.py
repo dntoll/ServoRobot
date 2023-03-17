@@ -10,6 +10,7 @@ from model.RemoteRobot import RemoteRobot
 from controller.Controller import Controller 
 
 import time
+import traceback
 
 from tkinter import Tk
 import sys
@@ -40,13 +41,14 @@ view = RobotArmView(robot, root, recording, controller)
 while True:
     try:
         time.sleep(0.1)
-        controller.update()
+        controller.update(view.editor_view)
         view.draw()
     except KeyboardInterrupt:
         remoteRobot.close()
         sys.exit(0)
     except Exception as e:
         print("RobotClient", e)
+        traceback.print_exc()
         remoteRobot.close()
         sys.exit(0)
         

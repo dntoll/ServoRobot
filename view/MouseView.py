@@ -3,11 +3,11 @@ import math
 class MouseView:
     
 
-    def __init__(self, canvas, controller, root, leftViewMiddlePoint, rightViewMiddlePoint, width, scale):
+    def __init__(self, canvas, controller, root, leftViewMiddlePoint, rightViewMiddlePoint, height, scale):
         self.leftViewMiddlePoint = leftViewMiddlePoint
         self.rightViewMiddlePoint = rightViewMiddlePoint
         self.root = root
-        self.width = width
+        self.height = height
         self.controller = controller
         canvas.bind('<Button-2>', self.stopWristFromControl)
         canvas.bind('<Button-3>', self.grip)
@@ -47,7 +47,7 @@ class MouseView:
 
         
         
-        if abs_coord_x < self.width/2:
+        if abs_coord_y < self.height/2:
 
 
             if self.controller.wristIsControlled is False:

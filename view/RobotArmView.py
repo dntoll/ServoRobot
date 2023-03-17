@@ -17,11 +17,11 @@ class RobotArmView(tk.Frame):
     def __init__(self, robotArm, root, recording, controller):
         super().__init__()
         self.arm = robotArm
-        self.height = 384
+        self.height = 1024
         self.width = 1024
         self.controller = controller
-        self.leftViewMiddlePoint = (self.width/4, 2* self.height /3)
-        self.rightViewMiddlePoint = (3*self.width/4, self.height / 2)
+        self.leftViewMiddlePoint = (self.width/4, self.height /4)
+        self.rightViewMiddlePoint = (self.width/4, 3*self.height / 4)
         self.debug = "hej"
         
         self.recording = recording
@@ -50,7 +50,7 @@ class RobotArmView(tk.Frame):
         self.editor_view.pack(side=tk.RIGHT, fill=tk.Y)
 
         self.keyView = KeyView(self, self.controller)
-        self.mouseView = MouseView(self.canvas, self.controller, self.root, self.leftViewMiddlePoint, self.rightViewMiddlePoint, self.width, self.scale)
+        self.mouseView = MouseView(self.canvas, self.controller, self.root, self.leftViewMiddlePoint, self.rightViewMiddlePoint, self.height, self.scale)
 
         self.canvas.pack(fill=tk.BOTH, expand=1)    
         self.focus_set()
@@ -79,7 +79,6 @@ class RobotArmView(tk.Frame):
         #Draw a clock like directional 
         self.drawTopView()
 
-        self.drawRecording()
              
     
         self.root.update_idletasks()
@@ -137,17 +136,6 @@ class RobotArmView(tk.Frame):
 
         self.canvas.create_text(20, 20, text=self.debug, fill="red", font=('Helvetica 9 bold'))
 
-    def drawRecording(self):
-        #RecordingView
-        i = 0
-        for x in self.recording.recording:
-            recording = str(x)
-            
-            
-            self.canvas.create_text(self.width/2, 30 + i*10, text=recording, fill="red", font=('Helvetica 9 bold'))
-            if self.recording.wantsToAppend is False and self.recording.editIndex == i:
-                self.canvas.create_text(self.width/2 -120, 30+i*10, text="*", fill="red", font=('Helvetica 9 bold'))
-            i += 1
     
     def userWantsReplay(self):
         return self.wantsReplay
