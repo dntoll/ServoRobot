@@ -53,7 +53,7 @@ class ServoJoint:
     def update(self):
 
         isDone = False
-        maxChangeAngle = 5
+        maxChangeAngle = 3
         if self.targetAngle > self.lastKnownAngle + maxChangeAngle:
             self.lastKnownAngle += maxChangeAngle
         elif self.targetAngle < self.lastKnownAngle - maxChangeAngle :

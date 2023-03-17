@@ -77,7 +77,7 @@ class Controller:
         for state in self.recording.recording:
             self.remoteRobot.sendPos(state)
             self.robot.setState(self.lastState)
-            time.sleep(1.5)
+            time.sleep(0.75)
             while self.robot.update() is False:
                 print("wait", flush=True)
     
