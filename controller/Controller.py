@@ -62,8 +62,8 @@ class Controller:
         self.lastState = state
         self.hasNewState = True
 
-    def save(self, index):
-        self.recording.save(self.lastState, index)
+    def storeState(self, index):
+        self.recording.setState(self.lastState, index)
     
     def grip(self):
         if self.lastState.grip == RobotArm.GRIP_CLOSED:

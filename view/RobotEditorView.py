@@ -42,7 +42,7 @@ class RobotEditorView(tk.Frame):
         self.grip_entry.grid(row=5, column=1)
         
         # Create a save button
-        self.save_button = tk.Button(self.edit_frame, text="Save", command=self.save)
+        self.save_button = tk.Button(self.edit_frame, text="Store", command=self.store)
         self.save_button.grid(row=6, column=0, columnspan=1)
 
         self.copy_button = tk.Button(self.edit_frame, text="Copy", command=self.copy)
@@ -64,7 +64,9 @@ class RobotEditorView(tk.Frame):
         self.update()
 
         if len(self.robot_states) > 0:
+            
             self.setState(self.robot_states[self.current_index])
+
     
     def copy(self):
         self.controller.duplicateCurrentState(self.current_index)
@@ -104,7 +106,7 @@ class RobotEditorView(tk.Frame):
     
 
 
-    def save(self):
+    def store(self):
 
 
         # Update the current robot state with the values in the edit fields
@@ -119,7 +121,7 @@ class RobotEditorView(tk.Frame):
             current_state.grip = float(self.grip_entry.get())
 
             self.controller.setState(current_state)
-            self.controller.save(self.current_index)
+            self.controller.storeState(self.current_index)
 
             self.update()
         except Exception as e:

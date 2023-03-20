@@ -19,7 +19,7 @@ from Protocol import *
 fake = FakeKit()
 robot = RobotArm(fake)
 robot.Relax()
-recording = Recording()
+recording = Recording(robot.getState())
 protocol = Protocol()
 
 
