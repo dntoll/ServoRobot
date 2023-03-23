@@ -1,9 +1,9 @@
 import tkinter as tk
 
 class RobotEditorView(tk.Frame):
-    def __init__(self, parent, robot_states, controller):
+    def __init__(self, parent, recording, controller):
         super().__init__(parent)
-        self.robot_states = robot_states
+        self.recording = recording
         self.controller = controller
         
         # Create a listbox to display the robot states
@@ -63,9 +63,9 @@ class RobotEditorView(tk.Frame):
 
         self.update()
 
-        if len(self.robot_states) > 0:
+        if self.recording.getNumStates() > 0:
             
-            self.setState(self.robot_states[self.current_index])
+            self.setState(self.recording.get(self.current_index))
 
     
     def copy(self):
@@ -85,7 +85,8 @@ class RobotEditorView(tk.Frame):
 
     def update(self):
         self.listbox.delete(0, tk.END)
-        for i, state in enumerate(self.robot_states):
+        for i in range(0, self.recording.getNumStates()):
+            state = self.recording.get(i)
             self.listbox.insert(tk.END, f"{state.name}")
         self.listbox.select_set(self.current_index)
     
@@ -112,7 +113,7 @@ class RobotEditorView(tk.Frame):
         # Update the current robot state with the values in the edit fields
 
         try:
-            current_state = self.robot_states[self.current_index]
+            current_state = self.recording.get(self.current_index)
             current_state.name = str(self.name_entry.get())
             current_state.distanceFromBase = float(self.distance_entry.get())
             current_state.heightOverBase = float(self.height_entry.get())

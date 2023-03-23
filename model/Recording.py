@@ -5,7 +5,7 @@ import pickle
 class Recording:
     def __init__(self, startState):
         self.recording = [startState]
-        self.fileName = "";
+        self.fileName = ""
 
     def duplicateCurrentState(self, index):
         self.recording.insert(index, copy.copy(self.recording[index]))

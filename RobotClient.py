@@ -33,7 +33,7 @@ HOST = "192.168.188.96"  # The server's hostname or IP address
 PORT = 65432  # The port used by the server
 
 remoteRobot = RemoteRobot(protocol, HOST, PORT)
-recording.load('recordings/rubber.pkl')
+recording.load('recordings/rubbers.pkl')
 
 root = Tk()
 controller = Controller(robot, recording, remoteRobot)
