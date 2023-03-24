@@ -26,7 +26,7 @@ class RobotArm:
 
     def __init__(self, kit):
         self.kit = kit
-        self.rotate = ServoJoint(self.kit, 15, self.ROTATE_FULLY_RIGHT, self.ROTATE_NORMAL, self.ROTATE_FULLY_LEFT)
+        self.rotate = ServoJoint(self.kit, 1, self.ROTATE_FULLY_RIGHT, self.ROTATE_NORMAL, self.ROTATE_FULLY_LEFT)
         self.shoulder = ServoJoint(self.kit, 8, self.SHOULDER_FORWARD, self.SHOULDER_UP, self.SHOULDER_BACKWARD)
         self.elbow = ServoJoint(self.kit, 5, self.ELBOW_FULLY_OPEN, self.ELBOW_90_DEG, self.ELBOW_FULLY_CLOSED)
         self.wrist = ServoJoint(self.kit, 0, self.WRIST_FULLY_DOWN, self.WRIST_NEUTRAL, self.WRIST_FULLY_UP)

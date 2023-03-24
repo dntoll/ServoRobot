@@ -32,13 +32,16 @@ class Recording:
 
     def setIndexToState(self, current_state_index, current_index_index):
         self.indicies[current_index_index] = current_state_index
+        self._save()
 
     def appendAfterIndex(self, current_state_index, current_index_index):
         self.indicies.insert(current_index_index+1, current_state_index)
+        self._save()
 
 
     def removeIndex(self, current_index_index):
         del self.indicies[current_index_index]
+        self._save()
 
     def removeCurrentState(self, index):
         del self.states[index]
@@ -51,6 +54,11 @@ class Recording:
         
 
     def _save(self):
+        if self.getNumIndicies() == 0:
+            self.indicies = [self.startState]
+        if self.getNumStates() == 0:
+            self.states = [self.startState]
+
         with open(self.fileName, 'wb') as file:
             pickle.dump(self.states, file)
         with open(self.fileName + "st", 'wb') as file:
@@ -66,7 +74,7 @@ class Recording:
                     self.states = [self.startState]
             with open(fileName + "st", 'rb') as file:
                 self.indicies = pickle.load(file)
-                if self.getNumStates() == 0:
+                if self.getNumIndicies() == 0:
                     self.indicies = [self.startState]
         except Exception as e:
             print("File Load error", e, flush=True)

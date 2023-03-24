@@ -110,19 +110,38 @@ class RobotEditorView(tk.Frame):
     def play(self):
         self.controller.play()
 
-    def update(self):
-        self.stateListBox.delete(0, tk.END)
-        for i in range(0, self.recording.getNumStates()):
-            state = self.recording.getState(i)
-            self.stateListBox.insert(tk.END, f"{state.name}")
-        self.stateListBox.select_set(self.current_state_index)
+    def update(self, doUpdateIndex = True, doUpdateState = True):
 
+        if doUpdateState == True:
+            self.stateListBox.delete(0, tk.END)
+            for i in range(0, self.recording.getNumStates()):
+                state = self.recording.getState(i)
+                name = f"{state.name}"
+                if i == self.current_state_index:
+                    name = "* " + name
+                self.stateListBox.insert(tk.END, name)
+            print ("Update selects state", self.current_state_index, flush=True)
+            self.stateListBox.selection_set(self.current_state_index)
+            self.stateListBox.select_anchor(self.current_state_index)
+            self.stateListBox.activate(self.current_state_index)
+            
         #Then the indicies
-        self.indiciesListBox.delete(0, tk.END)
-        for i in range(0, self.recording.getNumIndicies()):
-            state = self.recording.getIndex(i)
-            self.indiciesListBox.insert(tk.END, f"{state.name}")
-        self.indiciesListBox.select_set(self.current_state_index)
+        if doUpdateIndex == True:
+            self.indiciesListBox.delete(0, tk.END)
+            for i in range(0, self.recording.getNumIndicies()):
+                state = self.recording.getIndex(i)
+
+                name = f"{state.name}"
+                if i == self.current_index_index:
+                    name = "* " + name
+
+                self.indiciesListBox.insert(tk.END, name)
+
+            print ("Update selects index", self.current_index_index, flush=True)
+            self.indiciesListBox.select_set(self.current_index_index)
+            self.indiciesListBox.select_anchor(self.current_index_index)
+            self.indiciesListBox.activate(self.current_index_index)
+        
 
     
     def setState(self, state):
@@ -164,20 +183,35 @@ class RobotEditorView(tk.Frame):
             print("RobotEditorView.save", e, flush=True)
 
     def on_selectIndex(self, event):
-        selection_index = self.indiciesListBox.curselection()[0]
-        self.current_index_index = selection_index
-        print ("Selected index")
+        print("Indicies selection", self.indiciesListBox.curselection(), flush=True)
+        if len(self.indiciesListBox.curselection()) > 0:
+            print ("Selected index", self.indiciesListBox.curselection()[0] , flush=True)
+            selection_index = self.indiciesListBox.curselection()[0]
+            if self.current_index_index != selection_index:
+                self.current_index_index = selection_index
+                self.update(True, False)
+            selected_state = self.controller.recording.getIndex(selection_index)
+            self.controller.setState(selected_state)
+            self.setState(selected_state)
+                
+        
 
     def on_select(self, event):
         # Load the selected robot state into the edit fields
-
-        try:
-            print(self.stateListBox.curselection())
+        
+        print("State Selection", self.stateListBox.curselection(), flush=True)
+        if len(self.stateListBox.curselection()) > 0:
+            print ("Selected state", self.stateListBox.curselection()[0], flush=True)
             selection_index = self.stateListBox.curselection()[0]
-            self.current_state_index = selection_index
+
+            if self.current_state_index != selection_index:
+                self.current_state_index = selection_index
+                self.update(False, True)
             selected_state = self.controller.recording.getState(selection_index)
-            self.controller.setState(selected_state)
+            #self.controller.setState(selected_state)
             self.setState(selected_state)
-        except Exception as e:
-            print("RobotEditorView", e)
+
+                
+                
+
 
