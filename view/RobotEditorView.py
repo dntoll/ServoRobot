@@ -5,11 +5,17 @@ class RobotEditorView(tk.Frame):
         super().__init__(parent)
         self.recording = recording
         self.controller = controller
+
+
+        # Create a listbox to display the indicies
+        self.indiciesListBox = tk.Listbox(self)
+        self.indiciesListBox.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True)
+        self.indiciesListBox.bind('<<ListboxSelect>>', self.on_selectIndex)
         
         # Create a listbox to display the robot states
-        self.listbox = tk.Listbox(self)
-        self.listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-        self.listbox.bind('<<ListboxSelect>>', self.on_select)
+        self.stateListBox = tk.Listbox(self)
+        self.stateListBox.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        self.stateListBox.bind('<<ListboxSelect>>', self.on_select)
         
         
         # Create a frame to hold the edit fields
@@ -56,39 +62,68 @@ class RobotEditorView(tk.Frame):
 
         self.copy_button = tk.Button(self.edit_frame, text="Delete", command=self.removeCurrentState)
         self.copy_button.grid(row=7, column=2, columnspan=1)
+
+        self.copy_button = tk.Button(self.edit_frame, text="Set Index to State", command=self.setIndexToState)
+        self.copy_button.grid(row=8, column=1, columnspan=1)
+
+        self.copy_button = tk.Button(self.edit_frame, text="Append After Index", command=self.appendAfterIndex)
+        self.copy_button.grid(row=8, column=2, columnspan=1)
+
+        self.copy_button = tk.Button(self.edit_frame, text="Delete Index", command=self.removeIndex)
+        self.copy_button.grid(row=9, column=2, columnspan=1)
         
 
         # Initialize the edit fields with the first robot state
-        self.current_index = 0
+        self.current_state_index = 0
+        self.current_index_index = 0
 
         self.update()
 
         if self.recording.getNumStates() > 0:
             
-            self.setState(self.recording.get(self.current_index))
+            self.setState(self.recording.getState(self.current_state_index))
 
+    def setIndexToState(self):
+        self.controller.setIndexToState(self.current_state_index, self.current_index_index)
+        self.update()
+
+    def appendAfterIndex(self):
+        self.controller.appendAfterIndex(self.current_state_index, self.current_index_index)
+        self.update()
+
+    def removeIndex(self):
+        self.controller.removeIndex(self.current_index_index)
+        self.update()
     
     def copy(self):
-        self.controller.duplicateCurrentState(self.current_index)
+        self.controller.duplicateCurrentState(self.current_state_index)
         self.update()
 
     def relax(self):
-        self.controller.setStateToRelax(self.current_index)
+        self.controller.setStateToRelax(self.current_state_index)
         self.update()
 
     def removeCurrentState(self):
-        self.controller.removeCurrentState(self.current_index)
+        self.controller.removeCurrentState(self.current_state_index)
         self.update()
 
     def play(self):
         self.controller.play()
 
     def update(self):
-        self.listbox.delete(0, tk.END)
+        self.stateListBox.delete(0, tk.END)
         for i in range(0, self.recording.getNumStates()):
-            state = self.recording.get(i)
-            self.listbox.insert(tk.END, f"{state.name}")
-        self.listbox.select_set(self.current_index)
+            state = self.recording.getState(i)
+            self.stateListBox.insert(tk.END, f"{state.name}")
+        self.stateListBox.select_set(self.current_state_index)
+
+        #Then the indicies
+        self.indiciesListBox.delete(0, tk.END)
+        for i in range(0, self.recording.getNumIndicies()):
+            state = self.recording.getIndex(i)
+            self.indiciesListBox.insert(tk.END, f"{state.name}")
+        self.indiciesListBox.select_set(self.current_state_index)
+
     
     def setState(self, state):
         self.name_entry.delete(0, tk.END)
@@ -113,7 +148,7 @@ class RobotEditorView(tk.Frame):
         # Update the current robot state with the values in the edit fields
 
         try:
-            current_state = self.recording.get(self.current_index)
+            current_state = self.recording.getState(self.current_state_index)
             current_state.name = str(self.name_entry.get())
             current_state.distanceFromBase = float(self.distance_entry.get())
             current_state.heightOverBase = float(self.height_entry.get())
@@ -122,22 +157,25 @@ class RobotEditorView(tk.Frame):
             current_state.grip = float(self.grip_entry.get())
 
             self.controller.setState(current_state)
-            self.controller.storeState(self.current_index)
+            self.controller.storeState(self.current_state_index)
 
             self.update()
         except Exception as e:
             print("RobotEditorView.save", e, flush=True)
 
-        
+    def on_selectIndex(self, event):
+        selection_index = self.indiciesListBox.curselection()[0]
+        self.current_index_index = selection_index
+        print ("Selected index")
 
     def on_select(self, event):
         # Load the selected robot state into the edit fields
 
         try:
-            print(self.listbox.curselection())
-            selection_index = self.listbox.curselection()[0]
-            self.current_index = selection_index
-            selected_state = self.controller.recording.get(selection_index)
+            print(self.stateListBox.curselection())
+            selection_index = self.stateListBox.curselection()[0]
+            self.current_state_index = selection_index
+            selected_state = self.controller.recording.getState(selection_index)
             self.controller.setState(selected_state)
             self.setState(selected_state)
         except Exception as e:

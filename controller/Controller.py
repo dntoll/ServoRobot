@@ -74,13 +74,21 @@ class Controller:
 
     
     def play(self):
-        for state in self.recording.recording:
-            self.remoteRobot.sendPos(state)
+        for index in range(0, self.recording.getNumIndicies()):
+            self.remoteRobot.sendPos(self.recording.getIndex(index))
             self.robot.setState(self.lastState)
             time.sleep(0.75)
             while self.robot.update() is False:
                 print("wait", flush=True)
     
+    def setIndexToState(self, current_state_index, current_index_index):
+        self.recording.setIndexToState(current_state_index, current_index_index)
+
+    def appendAfterIndex(self, current_state_index, current_index_index):
+        self.recording.appendAfterIndex(current_state_index, current_index_index)
+
+    def removeIndex(self, current_index_index):
+        self.recording.removeIndex(current_index_index)
 
     def update(self, view):
                 

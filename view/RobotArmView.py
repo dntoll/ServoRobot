@@ -88,7 +88,7 @@ class RobotArmView(tk.Frame):
         
 
         for i in range(0, self.recording.getNumStates()):
-            state = self.recording.get(i)
+            state = self.recording.getState(i)
             r = RobotArm(FakeKit())
             r.setState(state)
             
