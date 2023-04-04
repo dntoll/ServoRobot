@@ -7,7 +7,7 @@ import math
 class RobotArm:
     ROTATE_FULLY_LEFT = 180
     ROTATE_FULLY_RIGHT = 0
-    ROTATE_NORMAL = 90
+    ROTATE_NORMAL = 54
 
     GRIP_CLOSED = 180
     GRIP_OPEN = 60
@@ -26,7 +26,7 @@ class RobotArm:
 
     def __init__(self, kit):
         self.kit = kit
-        self.rotate = ServoJoint(self.kit, 1, self.ROTATE_FULLY_RIGHT, self.ROTATE_NORMAL, self.ROTATE_FULLY_LEFT)
+        self.rotate = ServoJoint(self.kit, 15, self.ROTATE_FULLY_RIGHT, self.ROTATE_NORMAL, self.ROTATE_FULLY_LEFT)
         self.shoulder = ServoJoint(self.kit, 8, self.SHOULDER_FORWARD, self.SHOULDER_UP, self.SHOULDER_BACKWARD)
         self.elbow = ServoJoint(self.kit, 5, self.ELBOW_FULLY_OPEN, self.ELBOW_90_DEG, self.ELBOW_FULLY_CLOSED)
         self.wrist = ServoJoint(self.kit, 0, self.WRIST_FULLY_DOWN, self.WRIST_NEUTRAL, self.WRIST_FULLY_UP)
@@ -41,15 +41,6 @@ class RobotArm:
         self.name = "unnamed"
         
         
-    #def setState(self, rotate, shoulder, elbow, wrist, grip):
-    #    self.Rotate(rotate)
-    #    self.Shoulder(shoulder)
-    #    self.Elbow(elbow)
-    #    self.Wrist(wrist)
-    #    self.Grip(grip)
-
-        #print("shoulder straight", self.wristBone)
-
     def getState(self):
         wp = self.wristBone.getPos()
         return RobotState(wp.x, 
@@ -78,11 +69,13 @@ class RobotArm:
         
         try:
             
+
             dy = self.wristBone.length * math.sin(state.wristWorldAngleRadians)
             dx = self.wristBone.length * math.cos(state.wristWorldAngleRadians)
 
-            x = state.distanceFromBase-dx
-            y = state.heightOverBase-dy
+            # Find the position of the wrist when removing the hand(wristBone)
+            x = state.distanceFromBase - dx
+            y = state.heightOverBase - dy
 
             #print(tipx, tipy, x, y)
             #https://www.researchgate.net/publication/328583527_A_Geometric_Approach_to_Inverse_Kinematics_of_a_3_DOF_Robotic_Arm

@@ -40,7 +40,6 @@ class Controller:
     def setWrist(self, newWrist):
         self.lastState.wristWorldAngleRadians = newWrist
         self.hasNewState = True
-        print("wrist")
 
     def setDistanceHeight(self, newDistance, newHeight):
         self.lastState.heightOverBase = newHeight
@@ -48,7 +47,6 @@ class Controller:
         self.hasNewState = True
         if self.lastState.distanceFromBase < 0:
             self.lastState.distanceFromBase = 0
-        print("distanceHeight")
 
     def setDistanceRotation(self, newDistance, newRotation):
         self.lastState.distanceFromBase = newDistance
